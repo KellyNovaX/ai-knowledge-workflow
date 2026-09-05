@@ -15,6 +15,7 @@ const pluginAssets = [
   "LICENSE",
   "THIRD_PARTY_NOTICES.md",
   "README.md",
+  "README.zh-CN.md",
   "CHANGELOG.md",
   "docs/START-HERE.md",
   "docs/PUBLISHING.md",

@@ -38,8 +38,8 @@ class TaskSuggestModal extends SuggestModal<BoardTask> {
     }
   }
 
-  onOpen(): void {
-    super.onOpen();
+  async onOpen(): Promise<void> {
+    await super.onOpen();
     this.renderTabs();
     this.computeFiltered();
     this.rerender();
@@ -48,7 +48,7 @@ class TaskSuggestModal extends SuggestModal<BoardTask> {
   onClose(): void {
     this.tabEl?.remove();
     this.pageEl?.remove();
-    setTimeout(() => {
+    window.setTimeout(() => {
       if (!this.settled) {
         this.settled = true;
         this.resolveTask(null);
@@ -84,7 +84,7 @@ class TaskSuggestModal extends SuggestModal<BoardTask> {
       .trim();
     const title = raw.length > 15 ? raw.substring(0, 15) + "…" : raw;
     el.createSpan({ text: title });
-    const statusKey = task.status as TaskStatus;
+    const statusKey = task.status;
     const statusLabel = TASK_STATUS_TITLES[statusKey] ?? task.status;
     el.createSpan({ cls: `ai-knowledge-task-status-badge ai-knowledge-status-${statusKey}`, text: statusLabel });
   }

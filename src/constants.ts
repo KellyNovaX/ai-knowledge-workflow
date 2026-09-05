@@ -126,7 +126,7 @@ export function normalizeTaskStatusValue(
   }
 
   const normalized = trimmed.toLowerCase();
-  const matchedStatus = TASK_STATUS_ORDER.find((status) => status === normalized);
+  const matchedStatus = TASK_STATUS_ORDER.find((status) => status.toString() === normalized);
   const matchedLabel = TASK_STATUS_ORDER.find(
     (status) => TASK_STATUS_LABELS[status].toLowerCase() === normalized
   );

@@ -178,7 +178,7 @@ class DirectTaskModal extends Modal {
 
   onOpen(): void {
     this.contentEl.empty();
-    this.contentEl.createEl("h2", { text: "Create Project Task" });
+    this.contentEl.createEl("h2", { text: "Create project task" });
     const projects = listProjectNames(this.app);
     if (!this.project || !projects.includes(this.project)) {
       this.project = projects[0] ?? "";
@@ -296,7 +296,7 @@ class DirectGeneralTaskModal extends Modal {
 
   onOpen(): void {
     this.contentEl.empty();
-    this.contentEl.createEl("h2", { text: "Add General Task" });
+    this.contentEl.createEl("h2", { text: "Add general task" });
 
     new Setting(this.contentEl)
       .setName("Task title")
@@ -412,7 +412,7 @@ class DirectWorkflowModal extends Modal {
 
   onOpen(): void {
     this.contentEl.empty();
-    this.contentEl.createEl("h2", { text: "Create Workflow" });
+    this.contentEl.createEl("h2", { text: "Create workflow" });
     const projects = listProjectNames(this.app);
 
     let slugInput: import("obsidian").TextComponent | null = null;
@@ -571,7 +571,7 @@ function renderSingleProjectPicker(parent: HTMLElement, options: SingleProjectPi
       "aria-label": "搜索项目"
     }
   });
-  const selected = group.createEl("div", {
+  const selected = group.createDiv({
     cls: "ai-knowledge-project-selected",
     text: options.selectedProject ? `已选：${options.selectedProject}` : "未选择项目"
   });
@@ -624,7 +624,7 @@ function renderMultiProjectPicker(parent: HTMLElement, options: MultiProjectPick
       "aria-label": "搜索项目"
     }
   });
-  const selected = group.createEl("div", { cls: "ai-knowledge-project-selected" });
+  const selected = group.createDiv({ cls: "ai-knowledge-project-selected" });
   const results = group.createDiv({ cls: "ai-knowledge-project-results" });
 
   const renderSelected = () => {
@@ -650,7 +650,7 @@ function renderMultiProjectPicker(parent: HTMLElement, options: MultiProjectPick
       const label = results.createEl("label", { cls: "ai-knowledge-project-checkbox" });
       const checkbox = label.createEl("input", { type: "checkbox" });
       checkbox.checked = options.selectedProjects.has(project);
-      label.createEl("span", { text: project });
+      label.createSpan({ text: project });
       checkbox.addEventListener("change", () => {
         options.onChange(project, checkbox.checked);
         renderSelected();

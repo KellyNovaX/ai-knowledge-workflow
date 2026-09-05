@@ -26,7 +26,7 @@ class ManualPlanModal extends Modal {
   onOpen(): void {
     const { contentEl } = this;
     contentEl.empty();
-    contentEl.createEl("h2", { text: "Manual Plan" });
+    contentEl.createEl("h2", { text: "Manual plan" });
 
     const contextEl = contentEl.createDiv();
     contextEl.createEl("p", { text: `Inbox file: ${this.request.inboxFile.path}` });
@@ -47,9 +47,7 @@ class ManualPlanModal extends Modal {
 
     new Setting(contentEl).setName("Plan JSON").setDesc("Paste a complete plan JSON. Manual mode does not call a model.");
 
-    const textarea = contentEl.createEl("textarea");
-    textarea.style.width = "100%";
-    textarea.style.height = "320px";
+    const textarea = contentEl.createEl("textarea", { cls: "ai-knowledge-manual-plan-input" });
     textarea.value = this.planJson;
     textarea.addEventListener("input", () => {
       this.planJson = textarea.value;
@@ -65,7 +63,7 @@ class ManualPlanModal extends Modal {
       })
       .addButton((button) => {
         button
-          .setButtonText("Use Plan")
+          .setButtonText("Use plan")
           .setCta()
           .onClick(() => {
             this.finish(this.planJson);

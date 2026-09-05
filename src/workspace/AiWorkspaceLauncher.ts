@@ -261,11 +261,11 @@ export function resolveWorkspacePath(file: TAbstractFile): string {
     return parts.slice(0, 6).join("/");
   }
 
-  if (parts[0] === VaultDirectory.Workflows && parts[1]) {
+  if (parts[0] === VaultDirectory.Workflows.toString() && parts[1]) {
     return `${VaultDirectory.Workflows}/${parts[1]}`;
   }
 
-  if (parts[0] === VaultDirectory.Projects && parts[1]) {
+  if (parts[0] === VaultDirectory.Projects.toString() && parts[1]) {
     return `${VaultDirectory.Projects}/${parts[1]}`;
   }
 
@@ -273,9 +273,9 @@ export function resolveWorkspacePath(file: TAbstractFile): string {
 }
 
 function isProjectTaskPath(parts: string[]): boolean {
-  return parts[0] === VaultDirectory.Projects
+  return parts[0] === VaultDirectory.Projects.toString()
     && Boolean(parts[1])
-    && parts[2] === VaultDirectory.Inputs
+    && parts[2] === VaultDirectory.Inputs.toString()
     && Boolean(parts[3])
     && Boolean(parts[4])
     && Boolean(parts[5]);

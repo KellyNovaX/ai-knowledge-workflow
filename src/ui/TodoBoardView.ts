@@ -24,10 +24,7 @@ import {
   TASK_BOARD_PATH,
   TASK_DONE_PATH,
   TaskManualMoveDirection,
-  TaskBoardSortMode,
-  TaskNotesUpdate,
-  TaskWpsTargetsUpdate,
-  TaskProjectUpdate
+  TaskBoardSortMode
 } from "../vault/TaskBoard";
 import { ProjectRepository } from "../vault/ProjectRepository";
 import { TaskAttachmentUploader } from "../vault/TaskAttachmentUploader";
@@ -162,14 +159,14 @@ export class TodoBoardView extends ItemView {
   }
 
   private renderLoading(): void {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("ai-knowledge-todo-board");
     container.createEl("p", { text: "刷新中...", cls: "ai-knowledge-muted" });
   }
 
   private renderError(message: string): void {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("ai-knowledge-todo-board");
     container.createEl("p", { text: message, cls: "ai-knowledge-error" });
@@ -180,7 +177,7 @@ export class TodoBoardView extends ItemView {
     index: VaultIndex,
     issues: ValidationIssue[]
   ): void {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("ai-knowledge-todo-board");
 
@@ -223,7 +220,7 @@ export class TodoBoardView extends ItemView {
     }
   }
 
-  private renderMainTabs(container: Element): void {
+  private renderMainTabs(container: HTMLElement): void {
     const tabs = container.createDiv({ cls: "ai-knowledge-main-tabs" });
     const tasksButton = tabs.createEl("button", { text: "Tasks" });
     const projectsButton = tabs.createEl("button", { text: "Projects" });
@@ -237,7 +234,7 @@ export class TodoBoardView extends ItemView {
     });
   }
 
-  private renderWorkflowActions(container: Element): void {
+  private renderWorkflowActions(container: HTMLElement): void {
     const panel = container.createDiv({ cls: "ai-knowledge-todo-actions-panel" });
     const workflowGroup = panel.createDiv({ cls: "ai-knowledge-action-group" });
     workflowGroup.createEl("h3", { text: "工作流" });
@@ -257,23 +254,23 @@ export class TodoBoardView extends ItemView {
     );
   }
 
-  private renderOpenAiAgentButton(parent: Element): void {
+  private renderOpenAiAgentButton(parent: HTMLElement): void {
     const button = parent.createEl("button", {
       cls: "ai-knowledge-open-agent-button",
       attr: {
-        "aria-label": "Open AI Agent in Vault",
-        title: "Open AI Agent in Vault"
+        "aria-label": "Open AI agent in vault",
+        title: "Open AI agent in vault"
       }
     });
     setIcon(button.createSpan({ cls: "ai-knowledge-open-agent-icon" }), "terminal");
-    button.createEl("span", { text: "Open AI Agent in Vault" });
+    button.createSpan({ text: "Open AI agent in vault" });
 
     button.addEventListener("click", () => {
       void this.openAiAgentInVault();
     });
   }
 
-  private renderMoreActionsButton(parent: Element): void {
+  private renderMoreActionsButton(parent: HTMLElement): void {
     const button = parent.createEl("button", {
       cls: "ai-knowledge-more-actions-button",
       attr: {
@@ -281,7 +278,7 @@ export class TodoBoardView extends ItemView {
         title: "更多操作"
       }
     });
-    button.createEl("span", { text: "更多操作" });
+    button.createSpan({ text: "更多操作" });
     setIcon(button.createSpan({ cls: "ai-knowledge-more-actions-icon" }), "chevron-down");
 
     button.addEventListener("click", (event) => {
@@ -316,44 +313,40 @@ export class TodoBoardView extends ItemView {
   }
 
   private async openAiAgentInVault(): Promise<void> {
-    const openAiAgentInVault = this.actions.openAiAgentInVault;
-
-    if (!openAiAgentInVault) {
-      new Notice("Open AI Agent in Vault is unavailable.");
+    if (!this.actions.openAiAgentInVault) {
+      new Notice("Open AI agent in vault is unavailable.");
       return;
     }
 
-    await openAiAgentInVault();
+    await this.actions.openAiAgentInVault();
   }
 
   private async runSkillAction(actionId: SkillActionId): Promise<void> {
-    const runSkillAction = this.actions.runSkillAction;
-
-    if (!runSkillAction) {
+    if (!this.actions.runSkillAction) {
       await notifySkillActionsUnavailable();
       return;
     }
 
-    await runSkillAction(actionId);
+    await this.actions.runSkillAction(actionId);
     await this.refresh();
   }
 
   private addActionButton(
-    parent: Element,
+    parent: HTMLElement,
     label: string,
     description: string,
     action: () => Promise<void>
   ): void {
     const button = parent.createEl("button", { cls: "ai-knowledge-action-button" });
-    button.createEl("span", { text: label, cls: "ai-knowledge-action-title" });
-    button.createEl("span", { text: description, cls: "ai-knowledge-action-desc" });
+    button.createSpan({ text: label, cls: "ai-knowledge-action-title" });
+    button.createSpan({ text: description, cls: "ai-knowledge-action-desc" });
     button.addEventListener("click", () => {
       void action().then(() => this.refresh());
     });
   }
 
   private renderStatusStrip(
-    container: Element,
+    container: HTMLElement,
     taskCount: number,
     index: VaultIndex,
     issues: ValidationIssue[]
@@ -364,20 +357,20 @@ export class TodoBoardView extends ItemView {
     this.renderStatusItem(strip, "校验", summarizeIssues(issues));
   }
 
-  private renderStatusItem(parent: Element, label: string, value: string): void {
-    const item = parent.createEl("span");
+  private renderStatusItem(parent: HTMLElement, label: string, value: string): void {
+    const item = parent.createSpan();
     item.createEl("strong", { text: value });
     item.appendText(` ${label}`);
   }
 
-  private renderBoardControls(container: Element): void {
+  private renderBoardControls(container: HTMLElement): void {
     const header = container.createDiv({ cls: "ai-knowledge-board-controls" });
     header.createEl("h3", { text: "任务" });
     const controls = header.createDiv({ cls: "ai-knowledge-board-control-actions" });
     this.renderToolbar(controls);
   }
 
-  private renderToolbar(parent: Element): void {
+  private renderToolbar(parent: HTMLElement): void {
     const searchWrap = parent.createDiv({ cls: "ai-knowledge-task-search-wrap" });
     const searchInput = searchWrap.createEl("input", {
       cls: "ai-knowledge-task-card-search",
@@ -457,11 +450,11 @@ export class TodoBoardView extends ItemView {
       void this.refresh();
     });
     const sortGroup = parent.createDiv({ cls: "ai-knowledge-sort-group" });
-    sortGroup.createEl("span", { text: "排序:", cls: "ai-knowledge-sort-label" });
+    sortGroup.createSpan({ text: "排序:", cls: "ai-knowledge-sort-label" });
     const priorityButton = sortGroup.createEl("button", { text: "优先级" });
     const manualButton = sortGroup.createEl("button", { text: "手动" });
     const typeGroup = parent.createDiv({ cls: "ai-knowledge-type-filter-group" });
-    typeGroup.createEl("span", { text: "类型:", cls: "ai-knowledge-sort-label" });
+    typeGroup.createSpan({ text: "类型:", cls: "ai-knowledge-sort-label" });
     const typeSelect = typeGroup.createEl("select", {
       cls: "ai-knowledge-type-filter-mode",
       attr: {
@@ -470,7 +463,7 @@ export class TodoBoardView extends ItemView {
       }
     });
     const dateGroup = parent.createDiv({ cls: "ai-knowledge-date-filter-group" });
-    dateGroup.createEl("span", { text: "日期:", cls: "ai-knowledge-sort-label" });
+    dateGroup.createSpan({ text: "日期:", cls: "ai-knowledge-sort-label" });
     const modeSelect = dateGroup.createEl("select", {
       cls: "ai-knowledge-date-filter-mode",
       attr: {
@@ -546,7 +539,7 @@ export class TodoBoardView extends ItemView {
     });
   }
 
-  private renderColumn(parent: Element, status: TaskStatus, tasks: BoardTask[]): void {
+  private renderColumn(parent: HTMLElement, status: TaskStatus, tasks: BoardTask[]): void {
     const totalPages = Math.max(1, Math.ceil(tasks.length / TASKS_PER_COLUMN_PAGE));
     const currentPage = clampPage(this.columnPages.get(status) ?? 1, totalPages);
     this.columnPages.set(status, currentPage);
@@ -556,15 +549,15 @@ export class TodoBoardView extends ItemView {
     const column = parent.createDiv({ cls: "ai-knowledge-kanban-column" });
     const header = column.createDiv({ cls: "ai-knowledge-kanban-column-header" });
     const title = header.createDiv({ cls: "ai-knowledge-kanban-column-heading" });
-    title.createEl("span", {
+    title.createSpan({
       text: TASK_STATUS_TITLES[status],
       cls: "ai-knowledge-kanban-column-title"
     });
-    title.createEl("span", {
+    title.createSpan({
       text: TASK_STATUS_LABELS[status],
       cls: "ai-knowledge-kanban-column-subtitle"
     });
-    header.createEl("span", { text: tasks.length.toString(), cls: "ai-knowledge-kanban-count" });
+    header.createSpan({ text: tasks.length.toString(), cls: "ai-knowledge-kanban-count" });
 
     const list = column.createDiv({ cls: "ai-knowledge-kanban-cards" });
 
@@ -585,7 +578,7 @@ export class TodoBoardView extends ItemView {
   }
 
   private renderColumnPagination(
-    parent: Element,
+    parent: HTMLElement,
     status: TaskStatus,
     currentPage: number,
     totalPages: number,
@@ -600,7 +593,7 @@ export class TodoBoardView extends ItemView {
       text: "上一页",
       cls: "ai-knowledge-pagination-button"
     });
-    const summary = footer.createEl("span", {
+    footer.createSpan({
       text: `第 ${currentPage} / ${totalPages} 页 · 共 ${totalTasks} 个`,
       cls: "ai-knowledge-pagination-summary"
     });
@@ -622,7 +615,7 @@ export class TodoBoardView extends ItemView {
     });
   }
 
-  private renderTaskCard(parent: Element, task: BoardTask): void {
+  private renderTaskCard(parent: HTMLElement, task: BoardTask): void {
     const isArchived = task.status === TaskStatus.Done;
     const card = parent.createDiv({
       cls: `ai-knowledge-task-card ai-knowledge-priority-${task.priority.toLowerCase()}`
@@ -634,12 +627,12 @@ export class TodoBoardView extends ItemView {
 
     const top = card.createDiv({ cls: "ai-knowledge-task-card-top" });
     const identity = top.createDiv({ cls: "ai-knowledge-task-identity" });
-    identity.createEl("span", {
+    identity.createSpan({
       text: task.priority,
       cls: `ai-knowledge-priority-badge ai-knowledge-priority-badge-${task.priority.toLowerCase()}`,
       attr: { title: `优先级：${TASK_PRIORITY_DISPLAY[task.priority]}` }
     });
-    identity.createEl("span", {
+    identity.createSpan({
       text: TASK_SCOPE_DISPLAY[task.taskScope],
       cls: `ai-knowledge-task-type-badge ai-knowledge-task-type-${task.taskScope}`,
       attr: {
@@ -703,7 +696,7 @@ export class TodoBoardView extends ItemView {
     const moreMenu = moreWrapper.createDiv({ cls: "ai-knowledge-task-more-menu" });
 
     if (task.status !== TaskStatus.Done) {
-      const completeItem = moreMenu.createEl("div", { cls: "ai-knowledge-task-more-item", attr: { "aria-label": `完成任务：${titleText}`, title: "完成任务" } });
+      const completeItem = moreMenu.createDiv({ cls: "ai-knowledge-task-more-item", attr: { "aria-label": `完成任务：${titleText}`, title: "完成任务" } });
       setIcon(completeItem.createSpan(), "check");
       completeItem.createSpan({ text: " 完成", cls: "ai-knowledge-task-more-item-text" });
       completeItem.addEventListener("click", (e) => {
@@ -713,7 +706,7 @@ export class TodoBoardView extends ItemView {
       });
     }
 
-    const copyItem = moreMenu.createEl("div", { cls: "ai-knowledge-task-more-item", attr: { "aria-label": `复制给 Agent：${titleText}`, title: "复制给 Agent" } });
+    const copyItem = moreMenu.createDiv({ cls: "ai-knowledge-task-more-item", attr: { "aria-label": `复制给 Agent：${titleText}`, title: "复制给 Agent" } });
     setIcon(copyItem.createSpan(), "copy");
     copyItem.createSpan({ text: " 复制给 Agent", cls: "ai-knowledge-task-more-item-text" });
     copyItem.addEventListener("click", (e) => {
@@ -750,7 +743,7 @@ export class TodoBoardView extends ItemView {
     }
 
     const titleRow = card.createDiv({ cls: "ai-knowledge-task-title-row" });
-    titleRow.createEl("div", { text: titleText, cls: "ai-knowledge-task-card-title" });
+    titleRow.createDiv({ text: titleText, cls: "ai-knowledge-task-card-title" });
     if (!isArchived) {
       const editTitleButton = createTaskIconButton(
         titleRow,
@@ -782,13 +775,13 @@ export class TodoBoardView extends ItemView {
         dueDateInput.click();
       });
     }
-    const noteTag = summary.createEl("span", {
+    const noteTag = summary.createSpan({
       text: "说明",
       cls: "ai-knowledge-task-note-tag" + (calloutLines.length === 0 ? " ai-knowledge-task-tag-empty" : ""),
       attr: { title: "单击查看 / 双击编辑" }
     });
 
-    const wpsTag = summary.createEl("span", {
+    const wpsTag = summary.createSpan({
       text: task.wpsTargets.length > 0
         ? `WPS:${task.wpsTargets.map(t => t.label.length > 10 ? t.label.slice(0, 10) + "…" : t.label).join(",")}`
         : "WPS",
@@ -828,7 +821,7 @@ export class TodoBoardView extends ItemView {
 
     const noteBlock = card.createDiv({ cls: "ai-knowledge-task-note-block" });
     for (const line of calloutLines) {
-      noteBlock.createEl("div", { text: line, cls: "ai-knowledge-task-note-line" });
+      noteBlock.createDiv({ text: line, cls: "ai-knowledge-task-note-line" });
     }
 
     noteTag.addEventListener("click", (e) => {
@@ -850,7 +843,7 @@ export class TodoBoardView extends ItemView {
     const wpsBlock = card.createDiv({ cls: "ai-knowledge-task-wps-block" });
     if (task.wpsTargets.length > 0) {
       const targetLine = wpsBlock.createDiv({ cls: "ai-knowledge-task-wps-detail" });
-      targetLine.createEl("span", { text: task.wpsTargets.map((target) => target.label).join("，") });
+      targetLine.createSpan({ text: task.wpsTargets.map((target) => target.label).join("，") });
       if (this.actions.openWpsChat) {
         const openWpsChatButton = createTaskIconButton(
           targetLine,
@@ -911,13 +904,13 @@ export class TodoBoardView extends ItemView {
 
     const detailMeta = details.createDiv({ cls: "ai-knowledge-task-detail-meta" });
     if (task.taskId) {
-      detailMeta.createEl("span", { text: `ID:${task.taskId}`, cls: "ai-knowledge-task-id-tag" });
+      detailMeta.createSpan({ text: `ID:${task.taskId}`, cls: "ai-knowledge-task-id-tag" });
     }
     if (task.createdAt) {
-      detailMeta.createEl("span", { text: `创建:${task.createdAt}`, cls: "ai-knowledge-task-created-tag" });
+      detailMeta.createSpan({ text: `创建:${task.createdAt}`, cls: "ai-knowledge-task-created-tag" });
     }
     if (task.dueDate) {
-      detailMeta.createEl("span", { text: `截止:${task.dueDate}`, cls: "ai-knowledge-task-due-tag" });
+      detailMeta.createSpan({ text: `截止:${task.dueDate}`, cls: "ai-knowledge-task-due-tag" });
     }
 
     detailButton.addEventListener("click", (event) => {
@@ -929,7 +922,7 @@ export class TodoBoardView extends ItemView {
     });
   }
 
-  private renderTaskControls(parent: Element, task: BoardTask): void {
+  private renderTaskControls(parent: HTMLElement, task: BoardTask): void {
     const prioritySelect = parent.createEl("select", {
       cls: "ai-knowledge-task-select",
       attr: { "aria-label": "任务优先级" }
@@ -1028,7 +1021,7 @@ export class TodoBoardView extends ItemView {
     if (existingEditor) return;
 
     const titleRow = card.querySelector<HTMLElement>(".ai-knowledge-task-title-row");
-    if (titleRow) titleRow.style.display = "none";
+    titleRow?.addClass("ai-knowledge-hidden");
 
     const editor = card.createDiv({ cls: "ai-knowledge-task-title-editor" });
     const input = editor.createEl("input", {
@@ -1056,13 +1049,13 @@ export class TodoBoardView extends ItemView {
       }
       if (event.key === "Escape") {
         editor.remove();
-        if (titleRow) titleRow.style.display = "";
+        titleRow?.removeClass("ai-knowledge-hidden");
       }
     });
 
     cancelButton.addEventListener("click", () => {
       editor.remove();
-      if (titleRow) titleRow.style.display = "";
+      titleRow?.removeClass("ai-knowledge-hidden");
     });
   }
 
@@ -1084,7 +1077,7 @@ export class TodoBoardView extends ItemView {
     if (existingEditor) return;
 
     const noteBlock = card.querySelector<HTMLElement>(".ai-knowledge-task-note-block");
-    if (noteBlock) noteBlock.style.display = "none";
+    noteBlock?.addClass("ai-knowledge-hidden");
 
     const editor = card.createDiv({ cls: "ai-knowledge-task-note-editor" });
     const textarea = editor.createEl("textarea", {
@@ -1104,7 +1097,7 @@ export class TodoBoardView extends ItemView {
 
     cancelButton.addEventListener("click", () => {
       editor.remove();
-      if (noteBlock) noteBlock.style.display = "";
+      noteBlock?.removeClass("ai-knowledge-hidden");
     });
   }
 
@@ -1126,7 +1119,7 @@ export class TodoBoardView extends ItemView {
     if (existingEditor) return;
 
     const wpsBlock = card.querySelector<HTMLElement>(".ai-knowledge-task-wps-block");
-    if (wpsBlock) wpsBlock.style.display = "none";
+    wpsBlock?.addClass("ai-knowledge-hidden");
 
     const editor = card.createDiv({ cls: "ai-knowledge-task-wps-editor" });
     const input = editor.createEl("input", {
@@ -1146,7 +1139,7 @@ export class TodoBoardView extends ItemView {
 
     cancelButton.addEventListener("click", () => {
       editor.remove();
-      if (wpsBlock) wpsBlock.style.display = "";
+      wpsBlock?.removeClass("ai-knowledge-hidden");
     });
   }
 
@@ -1219,47 +1212,39 @@ export class TodoBoardView extends ItemView {
   }
 
   private async copyTaskToAgent(task: BoardTask): Promise<void> {
-    const copyTaskToAgent = this.actions.copyTaskToAgent;
-
-    if (!copyTaskToAgent) {
-      new Notice("Copy Task to Agent is unavailable.");
+    if (!this.actions.copyTaskToAgent) {
+      new Notice("Copy task to agent is unavailable.");
       return;
     }
 
-    await copyTaskToAgent(task);
+    await this.actions.copyTaskToAgent(task);
   }
 
   private async openTaskInAgent(task: BoardTask): Promise<void> {
-    const openTaskInAgent = this.actions.openTaskInAgent;
-
-    if (!openTaskInAgent) {
-      new Notice("Open Task in Agent is unavailable.");
+    if (!this.actions.openTaskInAgent) {
+      new Notice("Open task in agent is unavailable.");
       return;
     }
 
-    await openTaskInAgent(task);
+    await this.actions.openTaskInAgent(task);
   }
 
   private async openTaskInCodexApp(task: BoardTask): Promise<void> {
-    const openTaskInCodexApp = this.actions.openTaskInCodexApp;
-
-    if (!openTaskInCodexApp) {
-      new Notice("Open Task in Codex App is unavailable.");
+    if (!this.actions.openTaskInCodexApp) {
+      new Notice("Open task in Codex app is unavailable.");
       return;
     }
 
-    await openTaskInCodexApp(task);
+    await this.actions.openTaskInCodexApp(task);
   }
 
   private async openWpsChat(target: BoardTaskWpsTarget): Promise<void> {
-    const openWpsChat = this.actions.openWpsChat;
-
-    if (!openWpsChat) {
-      new Notice("Open WPS Chat is unavailable.");
+    if (!this.actions.openWpsChat) {
+      new Notice("Open WPS chat is unavailable.");
       return;
     }
 
-    await openWpsChat(target);
+    await this.actions.openWpsChat(target);
   }
 
   private async populateProjectSelect(select: HTMLSelectElement, task: BoardTask): Promise<void> {
@@ -1323,7 +1308,7 @@ export class TodoBoardView extends ItemView {
   private async confirmAndUpdateWorkflowProjects(task: BoardTask, projects: string[]): Promise<void> {
     const nextProjects = normalizeProjectNames(projects);
     if (nextProjects.length === 0) {
-      new Notice("workflow 至少需要保留一个关联项目。");
+      new Notice("Workflow 至少需要保留一个关联项目。");
       return;
     }
 
@@ -1345,7 +1330,7 @@ export class TodoBoardView extends ItemView {
 
     try {
       await new TaskBoard(this.app).updateWorkflowProjects({ task, projects: nextProjects });
-      new Notice("workflow 关联项目已更新。");
+      new Notice("Workflow 关联项目已更新。");
       await this.refresh();
       await this.actions.validateVault();
     } catch (error) {
@@ -1436,15 +1421,20 @@ function updateDateFilterInputs(
 }
 
 function matchesTaskScopeFilter(task: BoardTask, mode: TaskScopeFilterMode): boolean {
-  if (mode === TaskScopeFilterMode.Any) {
-    return true;
+  switch (mode) {
+    case TaskScopeFilterMode.Any:
+      return true;
+    case TaskScopeFilterMode.General:
+      return task.taskScope === TaskScope.General;
+    case TaskScopeFilterMode.Project:
+      return task.taskScope === TaskScope.Project;
+    case TaskScopeFilterMode.Workflow:
+      return task.taskScope === TaskScope.Workflow;
   }
-
-  return task.taskScope === (mode as unknown as TaskScope);
 }
 
 function createTaskIconButton(
-  parent: Element,
+  parent: HTMLElement,
   icon: string,
   ariaLabel: string,
   title: string,
@@ -1534,25 +1524,25 @@ function matchesProjectSearch(task: BoardTask, searchText: string): boolean {
 }
 
 function renderProjectTag(parent: HTMLElement, projects: string[]): void {
-  const projectTag = parent.createEl("span", {
+  const projectTag = parent.createSpan({
     cls: "ai-knowledge-task-meta-tag" + (projects.length === 0 ? " ai-knowledge-task-tag-empty" : ""),
     attr: {
       title: projects.length > 0 ? `关联项目：${projects.join("、")}` : "未关联项目"
     }
   });
 
-  projectTag.createEl("span", {
+  projectTag.createSpan({
     text: "项目",
     cls: "ai-knowledge-task-meta-label"
   });
 
-  projectTag.createEl("span", {
+  projectTag.createSpan({
     text: projects.length > 0 ? projects[0] : "未关联",
     cls: "ai-knowledge-task-meta-value"
   });
 
   if (projects.length > 1) {
-    projectTag.createEl("span", {
+    projectTag.createSpan({
       text: `+${projects.length - 1}`,
       cls: "ai-knowledge-task-meta-count"
     });
@@ -1573,89 +1563,6 @@ function normalizeProjectNames(projects: string[]): string[] {
   }
 
   return result;
-}
-
-class WpsEditModal extends Modal {
-  private readonly targets: BoardTaskWpsTarget[];
-  private readonly onSave: (targets: BoardTaskWpsTarget[]) => void;
-  private rows: { labelInput: HTMLInputElement; urlInput: HTMLInputElement; row: HTMLDivElement }[] = [];
-
-  constructor(
-    app: App,
-    targets: BoardTaskWpsTarget[],
-    onSave: (targets: BoardTaskWpsTarget[]) => void
-  ) {
-    super(app);
-    this.targets = targets.map((t) => ({ ...t }));
-    this.onSave = onSave;
-  }
-
-  onOpen(): void {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("ai-knowledge-wps-modal");
-    contentEl.createEl("h2", { text: "编辑 WPS 协作目标" });
-
-    const container = contentEl.createDiv({ cls: "ai-knowledge-wps-modal-rows" });
-
-    for (const target of this.targets) {
-      this.addRow(container, target);
-    }
-
-    const addButton = contentEl.createEl("button", {
-      text: "添加",
-      cls: "ai-knowledge-wps-modal-add"
-    });
-    addButton.addEventListener("click", () => {
-      this.addRow(container, { label: "", url: null });
-    });
-
-    const footer = contentEl.createDiv({ cls: "ai-knowledge-wps-modal-footer" });
-    const saveButton = footer.createEl("button", { text: "保存", cls: "mod-cta" });
-    const cancelButton = footer.createEl("button", { text: "取消" });
-
-    saveButton.addEventListener("click", () => {
-      const result = this.rows
-        .map((row) => ({
-          label: row.labelInput.value.trim(),
-          url: row.urlInput.value.trim() || null
-        }))
-        .filter((t) => t.label.length > 0);
-      this.onSave(result);
-      this.close();
-    });
-
-    cancelButton.addEventListener("click", () => {
-      this.close();
-    });
-  }
-
-  private addRow(container: HTMLDivElement, target: BoardTaskWpsTarget): void {
-    const row = container.createDiv({ cls: "ai-knowledge-wps-modal-row" });
-    const labelInput = row.createEl("input", {
-      cls: "ai-knowledge-wps-modal-label",
-      attr: { type: "text", placeholder: "名称（必填）", "aria-label": "WPS 名称" }
-    });
-    labelInput.value = target.label;
-
-    const urlInput = row.createEl("input", {
-      cls: "ai-knowledge-wps-modal-url",
-      attr: { type: "text", placeholder: "URL（选填）", "aria-label": "WPS URL" }
-    });
-    urlInput.value = target.url ?? "";
-
-    const deleteButton = row.createEl("button", {
-      cls: "ai-knowledge-wps-modal-delete",
-      attr: { "aria-label": "删除", title: "删除" }
-    });
-    setIcon(deleteButton, "trash-2");
-    deleteButton.addEventListener("click", () => {
-      row.remove();
-      this.rows = this.rows.filter((r) => r.row !== row);
-    });
-
-    this.rows.push({ labelInput, urlInput, row });
-  }
 }
 
 class TaskUploadModal extends Modal {
@@ -1703,14 +1610,14 @@ class TaskUploadModal extends Modal {
   }
 }
 
-function createHiddenFileInput(parent: Element, directory: boolean): HTMLInputElement {
+function createHiddenFileInput(parent: HTMLElement, directory: boolean): HTMLInputElement {
   const input = parent.createEl("input", {
     attr: {
       type: "file",
       multiple: "true"
     }
   });
-  input.style.display = "none";
+  input.addClass("ai-knowledge-hidden");
   if (directory) {
     input.setAttribute("webkitdirectory", "");
     input.setAttribute("directory", "");
@@ -1754,7 +1661,7 @@ class ProjectMultiSelectModal extends Modal {
         const label = results.createEl("label", { cls: "ai-knowledge-project-checkbox" });
         const checkbox = label.createEl("input", { type: "checkbox" });
         checkbox.checked = this.selectedProjects.has(project);
-        label.createEl("span", { text: project });
+        label.createSpan({ text: project });
         checkbox.addEventListener("change", () => {
           if (checkbox.checked) {
             this.selectedProjects.add(project);

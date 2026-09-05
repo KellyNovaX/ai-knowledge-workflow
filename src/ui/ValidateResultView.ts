@@ -29,11 +29,11 @@ export class ValidateResultView extends ItemView {
   }
 
   private render(): void {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("ai-knowledge-validate-view");
 
-    container.createEl("h2", { text: "Validate Results" });
+    container.createEl("h2", { text: "Validate results" });
 
     if (this.issues.length === 0) {
       container.createEl("p", {
@@ -51,11 +51,11 @@ export class ValidateResultView extends ItemView {
       const row = list.createDiv({
         cls: `ai-knowledge-issue ai-knowledge-severity-${issue.severity}`
       });
-      row.createEl("div", {
+      row.createDiv({
         text: `${issue.severity.toUpperCase()} · ${issue.code}`,
         cls: "ai-knowledge-issue-meta"
       });
-      row.createEl("div", {
+      row.createDiv({
         text: issue.message,
         cls: "ai-knowledge-issue-message"
       });

@@ -1,4 +1,5 @@
 import { Platform } from "obsidian";
+import { shell } from "electron";
 
 interface DesktopShell {
   openPath(path: string): Promise<string>;
@@ -10,7 +11,7 @@ function getDesktopShell(): DesktopShell {
     throw new Error("External applications are available only in Obsidian desktop.");
   }
 
-  return (require("electron") as { shell: DesktopShell }).shell;
+  return shell;
 }
 
 export async function openExternalFile(absolutePath: string): Promise<void> {

@@ -34,7 +34,7 @@ class CompleteTaskSuggestModal extends FuzzySuggestModal<CompletableTask> {
     private readonly resolveTask: (task: CompletableTask | null) => void
   ) {
     super(app);
-    this.setPlaceholder("Select a Doing/Todo/Pending Release task to complete");
+    this.setPlaceholder("Select a doing/todo/pending release task to complete");
   }
 
   getItems(): CompletableTask[] {
@@ -67,7 +67,7 @@ class CompleteTaskConfirmModal extends Modal {
 
   onOpen(): void {
     this.contentEl.empty();
-    this.contentEl.createEl("h2", { text: "Complete Task" });
+    this.contentEl.createEl("h2", { text: "Complete task" });
     this.contentEl.createEl("p", {
       text: `Archive from ${this.preview.fromSection} to 10-tasks/done.md.`
     });
@@ -83,7 +83,7 @@ class CompleteTaskConfirmModal extends Modal {
       )
       .addButton((button) =>
         button
-          .setButtonText("Confirm Complete")
+          .setButtonText("Confirm complete")
           .setCta()
           .onClick(() => this.finish(CompleteTaskDecision.Confirm))
       );

@@ -77,8 +77,6 @@ export class AiKnowledgeWorkflowSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "AI Knowledge Workflow" });
-
     new Setting(containerEl)
       .setName("Vault root")
       .setDesc("Optional absolute vault root override. Leave empty to use the current Obsidian vault automatically.")
@@ -140,7 +138,7 @@ export class AiKnowledgeWorkflowSettingTab extends PluginSettingTab {
       .setDesc("Complete non-interactive command that reads the prompt from standard input and writes its answer to standard output. Include all required arguments; no arguments are added automatically.")
       .addText((text) =>
         text
-          .setPlaceholder("your-ai-tool --non-interactive --stdin")
+          .setPlaceholder("Enter a command that reads from standard input")
           .setValue(this.plugin.settings.customCliPath)
           .onChange(async (value) => {
             this.plugin.settings.customCliPath = value.trim();

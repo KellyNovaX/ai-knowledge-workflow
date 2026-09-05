@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import builtins from "builtin-modules";
+import { builtinModules } from "node:module";
 import esbuild from "esbuild";
 
 const production = process.argv.includes("--production");
@@ -25,7 +25,8 @@ const context = await esbuild.context({
     "@lezer/common",
     "@lezer/highlight",
     "@lezer/lr",
-    ...builtins
+    ...builtinModules,
+    ...builtinModules.map((name) => "node:" + name)
   ],
   format: "cjs",
   logLevel: "info",

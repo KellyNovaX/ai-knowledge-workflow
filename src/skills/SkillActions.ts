@@ -393,7 +393,7 @@ class SkillResultModal extends Modal {
       this.followUpType === SkillResultFollowUp.Validate &&
       this.definition.validateAfterSuccess
     ) {
-      const validateButton = buttons.createEl("button", { text: "Run Vault Validate" });
+      const validateButton = buttons.createEl("button", { text: "Run vault validate" });
       validateButton.addClass("mod-cta");
       validateButton.addEventListener("click", () => {
         void this.followUp();

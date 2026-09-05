@@ -75,21 +75,21 @@ export class FaqView extends ItemView {
   }
 
   private renderLoading(): void {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("ai-knowledge-faq-view");
     container.createEl("p", { text: "刷新中...", cls: "ai-knowledge-muted" });
   }
 
   private renderError(message: string): void {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("ai-knowledge-faq-view");
     container.createEl("p", { text: message, cls: "ai-knowledge-error" });
   }
 
   private renderFaq(entries: FaqEntry[]): void {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("ai-knowledge-faq-view");
 
@@ -118,7 +118,7 @@ export class FaqView extends ItemView {
     this.renderEntryList(container, visibleEntries);
   }
 
-  private renderMainTabs(container: Element): void {
+  private renderMainTabs(container: HTMLElement): void {
     const tabs = container.createDiv({ cls: "ai-knowledge-main-tabs" });
     const tasksButton = tabs.createEl("button", { text: "Tasks" });
     const projectsButton = tabs.createEl("button", { text: "Projects" });
@@ -132,10 +132,10 @@ export class FaqView extends ItemView {
     faqButton.addClass("mod-cta");
   }
 
-  private renderControls(container: Element): void {
+  private renderControls(container: HTMLElement): void {
     const controls = container.createDiv({ cls: "ai-knowledge-faq-controls" });
     const filterGroup = controls.createDiv({ cls: "ai-knowledge-type-filter-group" });
-    filterGroup.createEl("span", { text: "分类:", cls: "ai-knowledge-sort-label" });
+    filterGroup.createSpan({ text: "分类:", cls: "ai-knowledge-sort-label" });
     const filterSelect = filterGroup.createEl("select", {
       cls: "ai-knowledge-faq-filter-mode",
       attr: {
@@ -170,7 +170,7 @@ export class FaqView extends ItemView {
   }
 
   private renderMetrics(
-    container: Element,
+    container: HTMLElement,
     entries: FaqEntry[],
     visibleCount: number
   ): void {
@@ -181,13 +181,13 @@ export class FaqView extends ItemView {
     this.renderMetric(metrics, "项目 FAQ", entries.filter((entry) => entry.category === FaqCategory.Project).length.toString());
   }
 
-  private renderMetric(parent: Element, label: string, value: string): void {
+  private renderMetric(parent: HTMLElement, label: string, value: string): void {
     const item = parent.createDiv({ cls: "ai-knowledge-metric" });
-    item.createEl("div", { text: value, cls: "ai-knowledge-metric-value" });
-    item.createEl("div", { text: label, cls: "ai-knowledge-metric-label" });
+    item.createDiv({ text: value, cls: "ai-knowledge-metric-value" });
+    item.createDiv({ text: label, cls: "ai-knowledge-metric-label" });
   }
 
-  private renderEntryList(container: Element, entries: FaqEntry[]): void {
+  private renderEntryList(container: HTMLElement, entries: FaqEntry[]): void {
     const list = container.createDiv({ cls: "ai-knowledge-faq-list" });
 
     if (entries.length === 0) {
@@ -200,11 +200,11 @@ export class FaqView extends ItemView {
     }
   }
 
-  private renderEntryCard(parent: Element, entry: FaqEntry): void {
+  private renderEntryCard(parent: HTMLElement, entry: FaqEntry): void {
     const card = parent.createDiv({ cls: "ai-knowledge-faq-card" });
     const top = card.createDiv({ cls: "ai-knowledge-faq-card-top" });
     const badges = top.createDiv({ cls: "ai-knowledge-faq-badges" });
-    badges.createEl("span", {
+    badges.createSpan({
       text: entry.category === FaqCategory.General ? "通用" : "项目",
       cls: `ai-knowledge-faq-badge ai-knowledge-faq-${entry.category}`
     });
@@ -251,13 +251,13 @@ export class FaqView extends ItemView {
     card.createEl("p", { text: entry.answer, cls: "ai-knowledge-faq-answer" });
 
     const meta = card.createDiv({ cls: "ai-knowledge-faq-meta" });
-    meta.createEl("span", { text: entry.project ?? "通用" });
-    meta.createEl("span", { text: entry.updatedAt ? `更新：${entry.updatedAt}` : "未记录更新时间" });
-    meta.createEl("span", { text: entry.path });
+    meta.createSpan({ text: entry.project ?? "通用" });
+    meta.createSpan({ text: entry.updatedAt ? `更新：${entry.updatedAt}` : "未记录更新时间" });
+    meta.createSpan({ text: entry.path });
   }
 
   private addHeaderButton(
-    parent: Element,
+    parent: HTMLElement,
     label: string,
     icon: string,
     action: () => Promise<void>

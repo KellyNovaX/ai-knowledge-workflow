@@ -266,7 +266,7 @@ function getFaqCategory(path: string): FaqCategory {
 }
 
 function isGeneralFaqPath(path: string): boolean {
-  return path === GeneralFaqPath.Default || path === GeneralFaqPath.Legacy;
+  return path === GeneralFaqPath.Default.toString() || path === GeneralFaqPath.Legacy.toString();
 }
 
 function getProjectFromFaqPath(path: string): string | null {

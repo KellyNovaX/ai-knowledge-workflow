@@ -1,102 +1,109 @@
 # AI Knowledge Workflow
 
-在 Obsidian 中管理工程知识、任务和工作流，把清晰的上下文交给 AI 编程助手。
+English | [简体中文](README.zh-CN.md)
 
-Organize project knowledge, track tasks, and prepare structured context for AI coding agents. The core workflow runs locally without an AI account. Desktop only; the interface is primarily Chinese.
+Organize project knowledge, track tasks, and prepare structured context for AI coding agents in Obsidian. Keep your project documentation, task details, and workflow records in ordinary Markdown files.
 
-## 能做什么
+The core workflow runs locally without an AI account. The plugin is desktop only, and its interface is primarily Chinese.
 
-- **任务看板**：管理待办、进行中、等待、待发布和积压任务，完成后归档，也可以重开。
-- **项目资料**：将项目入口、源码位置、环境说明和操作手册组织成普通 Markdown。
-- **四类工作流**：需求开发、问题排查、数据修复、数据导出，创建对应的记录和模板。
-- **结构检查**：检查任务状态、上下文和本地链接，减少资料与看板不同步。
-- **可选 AI 协作**：复制上下文到你使用的助手，或调用本机已安装的 Codex 或自定义 CLI。
+## Features
 
-所有任务内容保存在普通 Markdown 文件中。默认使用手工模式，不需要 AI 服务、API key 或其他插件即可创建、移动、完成和重开任务。
+- **Task board:** Manage to-do, in-progress, waiting, pending-release, and backlog tasks. Archive completed tasks and reopen them when needed.
+- **Project knowledge:** Organize project entry points, source-code locations, environment notes, and runbooks as Markdown documents.
+- **Four workflow types:** Create records and templates for feature development, incident investigation, data fixes, and data exports.
+- **Structure validation:** Check task status, context, and local links to help keep task records and the board consistent.
+- **Optional AI collaboration:** Copy context to your preferred assistant, or run a locally installed Codex or custom CLI.
 
-源码仓库：[KellyNovaX/ai-knowledge-workflow](https://github.com/KellyNovaX/ai-knowledge-workflow)。
+All task content is stored in ordinary Markdown files. Manual mode is the default: creating, moving, completing, and reopening tasks does not require an AI service, an API key, or another plugin.
 
-## 安装
+Source repository: [KellyNovaX/ai-knowledge-workflow](https://github.com/KellyNovaX/ai-knowledge-workflow).
 
-本版本是社区目录提交前的发布准备版；目前可手动安装。后续正式上架状态以 Obsidian 社区目录为准。
+## Installation
 
-### 已有知识库
+This release is being prepared for the community directory and can currently be installed manually. Check the Obsidian community directory for the current listing status.
 
-1. 取得发布包 `ai-knowledge-workflow-0.3.1.zip` 并解压。
-2. 将其中的 `ai-knowledge-workflow` 文件夹放入知识库的 `.obsidian/plugins/`。如果使用自定义配置目录，则放在该目录的 `plugins/` 下。
-3. 重新加载 Obsidian，在设置 → 第三方插件中启用 **AI Knowledge Workflow**。
-4. 在命令面板运行 **AI Knowledge: Initialize Vault Structure**，查看将要创建的内容并确认。初始化只补齐缺失文件，不覆盖已有内容。
+### Install in an existing vault
 
-更新时替换 `main.js`、`manifest.json`、`styles.css`，保留自己的 `data.json`。安装包不包含个人配置。
+1. Download and extract `ai-knowledge-workflow-0.3.2.zip`.
+2. Place the extracted `ai-knowledge-workflow` folder in your vault's `.obsidian/plugins/` directory. If your vault uses a custom configuration directory, use its `plugins/` subdirectory instead.
+3. Reload Obsidian and enable **AI Knowledge Workflow** under **Settings → Community plugins**.
+4. Run **AI Knowledge: Initialize vault structure** from the command palette. Review the files it proposes to create, then confirm. Initialization only adds missing files; it does not overwrite existing content.
 
-### 从零开始
+To update, replace `main.js`, `manifest.json`, and `styles.css`, and keep your own `data.json`. The installation package does not contain personal configuration.
 
-取得 `ai-knowledge-starter-0.3.1.zip`，解压后在 Obsidian 中选择“打开本地仓库”，选中解压的知识库文件夹。阅读其中的 `START-HERE.md`，手动启用插件即可。
+### Start with an empty vault
 
-## 第一次使用
+Download and extract `ai-knowledge-starter-0.3.2.zip`. In Obsidian, choose **Open folder as vault** and select the extracted vault folder. Read its `START-HERE.md`, then enable the plugin manually.
 
-1. 保持插件设置的 **AI agent = Manual**，**Vault root 留空**。
-2. 运行 **AI Knowledge: Add General Task**，创建一条不关联项目的任务。
-3. 运行 **AI Knowledge: Open Todo Board**，移动状态、打开入口，完成后在已完成列表中查看或重开。
-4. 需要项目任务时，先建立 `30-projects/<project>/AGENTS.md`、`index.md` 和 `links.md`。可使用下面的配套项目知识技能生成资料。
-5. 运行 **AI Knowledge: Validate Vault**，检查当前结构。新项目的目标分支需要按真实开发任务填写。
+## First steps
 
-| 目录 | 用途 |
+1. Keep **AI agent = Manual** and leave **Vault root** empty in the plugin settings.
+2. Run **AI Knowledge: Add general task** to create a task without linking it to a project.
+3. Run **AI Knowledge: Open todo board** to move tasks between states and open their details. Completed tasks appear in the completed list, where you can view or reopen them.
+4. When you need project tasks, first create `30-projects/<project>/AGENTS.md`, `index.md`, and `links.md`. The companion project-onboarding skill described below can generate these documents.
+5. Run **AI Knowledge: Validate vault** to check the structure. Fill in each new project's target branch to match the actual development task.
+
+| Directory | Purpose |
 | --- | --- |
-| `10-tasks/` | 任务看板、完成归档、通用任务 |
-| `20-workflows/` | 四类复杂工作流及执行记录 |
-| `30-projects/` | 项目稳定知识和项目任务 |
-| `80-inbox/` | 尚未整理的原始输入 |
-| `90-templates/` | 新任务和工作流模板 |
-| `rules/` | 提供给 AI 助手的知识库规则 |
+| `10-tasks/` | Task board, completed-task archive, and general tasks |
+| `20-workflows/` | The four workflow types and their execution records |
+| `30-projects/` | Stable project knowledge and project tasks |
+| `80-inbox/` | Raw input that has not been organized yet |
+| `90-templates/` | Templates for new tasks and workflows |
+| `rules/` | Vault instructions for AI assistants |
 
-任务入口的 YAML `status` 是状态来源；看板和归档由插件同步。完成时间写入 `completed_at`，重开清除，再次完成时重新记录。新生成链接采用标准 Markdown；已有 Wiki 链接仍可读取。
+The YAML `status` in each task entry is the source of task status; the plugin synchronizes the board and archive. Completing a task records `completed_at`. Reopening clears that timestamp, and completing the task again records a new one. Newly generated links use standard Markdown syntax; existing Wiki links can still be read.
 
-## 可选：配套 AI 技能
+## Optional companion AI skills
 
-源码中的 `companion-skills/` 提供项目资料生成、任务管理和周报三个技能。它们与 Obsidian 插件分别安装；插件不会自行安装它们。
+The source repository includes three skills in `companion-skills/`: project onboarding, task management, and weekly summaries. They are installed separately from the Obsidian plugin. The plugin does not install them automatically.
 
-将三个技能文件夹复制到知识库的 `.agents/skills/`，再按所用 AI 助手的技能发现方式加载。Starter 已包含这些文件，是否读取和执行由 AI 助手决定。运行其中的脚本需要 Python 3。自定义 CLI 默认留空；如需使用，请填写能够从标准输入接收提示词的完整非交互命令，插件不会额外追加命令参数。后台技能执行继承 CLI 已有的权限与沙箱设置，不自动扩大写入权限；如果 CLI 只允许读取，请改用交互终端按提示授权。
+Copy the three skill folders into your vault's `.agents/skills/` directory, then load them using your AI assistant's skill-discovery mechanism. The Starter package already includes these files; your AI assistant decides whether to read and execute them. Their scripts require Python 3.
 
-## 平台与外部集成
+The custom CLI command is empty by default. To use it, configure a complete non-interactive command that accepts prompts through standard input. The plugin does not append extra command arguments.
 
-需要 Obsidian 桌面版 1.5.0 或更新版本。移动端不支持。
+Background skill execution inherits the CLI's existing permissions and sandbox settings. It does not automatically expand write access. If the CLI only permits reading, use an interactive terminal and follow its authorization prompts.
 
-| 功能 | 说明 |
+## Platforms and external integrations
+
+Requires Obsidian desktop 1.5.0 or later. Mobile devices are not supported.
+
+| Feature | Requirements and limitations |
 | --- | --- |
-| 本地任务和知识管理 | 按桌面 API 实现；Windows/Linux 尚未进行真实设备验收 |
-| 复制上下文给助手 | 不依赖终端插件 |
-| Codex / 自定义 CLI 技能执行 | 需自行安装、登录并配置相应 CLI 和配套技能；服务可能收费 |
-| Obsidian 内嵌终端 | 可选的独立 Terminal 社区插件；需配置 POSIX shell；Windows 自动启动不可用 |
-| iTerm / Warp / WPS 自动化 | 仅 macOS，需对应软件；系统可能提示自动化授权 |
-| Codex 应用链接 | 需已安装能够处理对应链接的桌面应用 |
+| Local task and knowledge management | Implemented using desktop APIs; real-device validation on Windows and Linux is still pending |
+| Copy context to an assistant | Does not require a terminal plugin |
+| Run skills through Codex or a custom CLI | Install, sign in to, and configure the relevant CLI and companion skills yourself; external services may charge fees |
+| Embedded terminal in Obsidian | Uses the optional, separately installed Terminal community plugin; requires a configured POSIX shell; automatic launch is unavailable on Windows |
+| iTerm, Warp, and WPS automation | macOS only; requires the corresponding application; the operating system may request automation permission |
+| Codex application links | Requires an installed desktop application that handles the corresponding links |
 
-默认不会修改 Terminal 插件配置，不会接管文件列表点击或强制调整侧栏和标签布局。
+By default, the plugin does not modify the Terminal plugin's configuration, take over file-list clicks, or force changes to sidebar and tab layouts.
 
-## 隐私、网络与本地文件访问
+## Privacy, network use, and local file access
 
-- 插件本身不包含遥测、直接模型 API 请求、自更新或依赖安装逻辑。基本任务管理可离线使用。
-- 主动选择 Codex / 自定义 CLI 功能时，插件运行你设置的本机命令，并把选定的提示词和上下文交给该 CLI。CLI 可能读取知识库和源码目录，将内容发送到其配置的服务。Codex 通常连接 OpenAI，自定义 CLI 连接你所选择的服务；账号、费用和数据处理取决于所用 CLI 及其服务配置。
-- 外部命令拥有当前用户的文件权限，并不限制在 Obsidian 知识库内。项目源码路径和 Vault root 覆盖设置可能指向知识库外；只配置你信任的命令和目录。
-- 在 macOS 选择 Warp 并主动打开 AI 工作区时，会创建或覆盖用户目录的 `~/.warp/launch_configurations/ai-knowledge-workflow.yaml`，保存本次工作目录、CLI 命令及可选任务引用；配置会留在磁盘。其他终端/应用打开功能会调用系统应用或链接处理程序。
-- 向系统剪贴板复制上下文或交给外部应用，由相应操作显式触发。插件包不包含 API key、个人任务、公司项目资料或用户运行配置。
+- The plugin itself has no telemetry, direct model API requests, self-updating logic, or dependency installation. Basic task management works offline.
+- When you explicitly select a Codex or custom CLI feature, the plugin runs the local command you configured and passes the selected prompt and context to that CLI. The CLI may read the vault and source-code directories and send content to its configured service. Codex typically connects to OpenAI; a custom CLI connects to the service you choose. Account requirements, fees, and data handling depend on the CLI and its service configuration.
+- External commands run with the current user's file permissions and are not confined to the Obsidian vault. Project source paths and the Vault root override may point outside the vault. Configure only commands and directories you trust.
+- On macOS, selecting Warp and explicitly opening an AI workspace creates or overwrites `~/.warp/launch_configurations/ai-knowledge-workflow.yaml` in the user's home directory. This file stores the working directory, CLI command, and optional task reference for that workspace, and remains on disk. Other terminal and application launch features invoke system applications or link handlers.
+- Copying context to the system clipboard or passing it to another application requires an explicit user action. The plugin package does not include API keys, personal tasks, company project documents, or user runtime settings.
 
-## 开发与打包
+## Development and packaging
 
-需要 Node.js 20+ 和 npm；生成 ZIP 还需要 Python 3。
+Requires Node.js 22.13 or later and npm. Creating ZIP packages also requires Python 3.
 
 ```sh
-npm ci
+npm ci --ignore-scripts
+npm run lint
 npm run build
 npm run package
 ```
 
-`build` 包含类型检查并生成生产版 `main.js`，不附带源映射。`package` 生成插件包、干净 Starter、三个发布文件和校验和，输出在 `dist/`。开发监听使用 `npm run dev`。
+`build` performs type checking and produces a production `main.js` without source maps. `package` generates a plugin ZIP, a clean Starter ZIP, the three release files, and checksums in `dist/`. Use `npm run dev` for development watch mode.
 
-已通过空库初始化、四类工作流创建、任务归档/重开、特殊标题、编码路径和自定义配置目录的实际函数验证。真实 Obsidian UI 和 Windows/Linux 设备验收仍需完成，详情见 [验证记录](docs/VALIDATION.md)。
+Function-level validation has covered empty-vault initialization, creation of all four workflow types, task archiving and reopening, special characters in titles, encoded paths, and custom configuration directories. Real Obsidian UI validation and real-device validation on Windows and Linux are still pending. See the [validation record](docs/VALIDATION.md) for the evidence and its limits.
 
-发布步骤见 [发布指南](docs/PUBLISHING.md)，变更见 [CHANGELOG](CHANGELOG.md)。
+See the [publishing guide](docs/PUBLISHING.md) for release steps and the [changelog](CHANGELOG.md) for changes. These supporting documents are currently in Chinese.
 
 ## License
 
-MIT，见 [LICENSE](LICENSE)。包含 Zod，许可及版权见 [第三方声明](THIRD_PARTY_NOTICES.md)。本插件为独立社区项目。
+MIT; see [LICENSE](LICENSE). This plugin bundles Zod; its license and copyright notice are included in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). AI Knowledge Workflow is an independent community project.

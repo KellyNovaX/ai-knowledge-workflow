@@ -661,9 +661,9 @@ export class PlanExecutor {
       const relativeFile = stripPrefix(file, ProjectTaskTemplatePath.Root);
       if (
         isLocalRulesPath(relativeFile) ||
-        relativeFile === ProjectTaskTemplateFile.Agents ||
-        relativeFile === ProjectTaskTemplateFile.Index ||
-        relativeFile === ProjectTaskTemplateFile.Overview
+        relativeFile === ProjectTaskTemplateFile.Agents.toString() ||
+        relativeFile === ProjectTaskTemplateFile.Index.toString() ||
+        relativeFile === ProjectTaskTemplateFile.Overview.toString()
       ) {
         continue;
       }
@@ -896,10 +896,6 @@ export class PlanExecutor {
   }
 }
 
-function isWorkflowAgentsPath(path: string | null | undefined): boolean {
-  return Boolean(path && /^20-workflows\/[^/]+\/AGENTS\.md$/.test(path));
-}
-
 function isSinglePathSegment(value: string): boolean {
   return value.trim().length > 0 && !value.includes("/") && !value.includes("\\") && value !== "." && value !== "..";
 }
@@ -1029,65 +1025,6 @@ function rewriteWorkflowMoveTargets(
   );
 }
 
-function replaceWorkflowReadingSections(
-  content: string,
-  readingOrderSection: string,
-  requiredReadingSection: string
-): string {
-  return replaceMarkdownSection(
-    replaceMarkdownSection(content, "AI 阅读顺序", readingOrderSection),
-    "最小必读资料",
-    requiredReadingSection
-  );
-}
-
-function buildWorkflowReadingOrderSection(workflowPath: string, projects: string[]): string {
-  const workflowLinks = [
-    `- 先以本 workflow 入口确定上下文根、目标分支和禁止范围：[[${workflowPath}/AGENTS|workflow AGENTS]]。`,
-    `- 需要确认需求时读取 [[${workflowPath}/overview|overview]]；需要看待办时读取 [[${workflowPath}/todo|todo]]；需要看风险时读取 [[${workflowPath}/risk|risk]]。`,
-    "- `overview.md` 若存在 `状态：待确认` 的确认项，AI 必须先给出建议，再请用户确认或选择，写回结果后继续。",
-    "- 已确认或无需确认的确认项不要重复询问。",
-    "- 有原始需求、故障、工单、截图或口径材料时再读 `inputs/`。",
-    "- 需要项目稳定知识或源码路径时按需读取关联项目入口："
-  ];
-  const projectLinks = projects.flatMap((project) => [
-    `   - [[${PROJECTS_ROOT_PATH}/${project}/AGENTS|${project} AGENTS]]`,
-    `   - [[${PROJECTS_ROOT_PATH}/${project}/links|${project} links]]`
-  ]);
-
-  return [
-    "## AI 进入规则",
-    ...workflowLinks,
-    ...(projectLinks.length > 0 ? projectLinks : ["   - 待补充"]),
-    "- 只读取与本任务直接相关的输入材料和源码文件。"
-  ].join("\n");
-}
-
-function buildWorkflowRequiredReadingSection(
-  workflowPath: string,
-  projects: string[],
-  vaultRoot: string | undefined
-): string {
-  const absoluteWorkflowEntry = renderAbsoluteVaultPath(vaultRoot, `${workflowPath}/AGENTS.md`);
-  const lines = [
-    "## 按需资料",
-    `- 本 workflow 入口：\`${absoluteWorkflowEntry}\`。`,
-    `- 需求和确认项：[[${workflowPath}/overview|overview]]。`,
-    `- 待办：[[${workflowPath}/todo|todo]]。`,
-    "- 需要项目稳定知识时读取：",
-    ...(projects.length > 0
-      ? projects.map((project) => `   - [[${PROJECTS_ROOT_PATH}/${project}/AGENTS|${project} AGENTS]]`)
-      : ["   - 待补充"]),
-    "- 需要源码路径或文档入口时读取：",
-    ...(projects.length > 0
-      ? projects.map((project) => `   - [[${PROJECTS_ROOT_PATH}/${project}/links|${project} links]]`)
-      : ["   - 待补充"]),
-    "- 只读取与本任务直接相关的输入材料和源码文件。"
-  ];
-
-  return lines.join("\n");
-}
-
 function renderRelatedProjectRouteLine(projects: string[]): string {
   if (projects.length === 0) {
     return "- 关联项目：待补充";
@@ -1098,11 +1035,6 @@ function renderRelatedProjectRouteLine(projects: string[]): string {
     `[${project} links](../../${PROJECTS_ROOT_PATH}/${project}/links.md)`
   ]);
   return `- 关联项目：${links.join("、")}`;
-}
-
-function renderAbsoluteVaultPath(vaultRoot: string | undefined, path: string): string {
-  const normalizedVaultRoot = normalizeVaultRoot(vaultRoot);
-  return normalizedVaultRoot ? `${normalizedVaultRoot}/${path}` : path;
 }
 
 function replaceMarkdownSection(content: string, heading: string, nextSection: string): string {
@@ -1130,10 +1062,6 @@ function replaceMarkdownSection(content: string, heading: string, nextSection: s
 
 function removeMarkdownSections(content: string, headings: string[]): string {
   return headings.reduce((nextContent, heading) => replaceMarkdownSection(nextContent, heading, ""), content);
-}
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function getBoardTasks(plan: WorkflowPlan): PlanTask[] {
@@ -1219,7 +1147,6 @@ function renderProjectTaskFile(
   const { title } = parsePlanTaskText(task.text);
   const projectLink = plan.project ? `[${plan.project}](../../../../index.md)` : "";
   const taskLink = task.link ?? "";
-  const taskFolder = parentPath(taskLink);
   const projectRootPath = plan.project ? `${PROJECTS_ROOT_PATH}/${plan.project}` : "";
   const projectAgentsLink = plan.project ? `[${plan.project} AGENTS](../../../../AGENTS.md)` : "";
   const projectLinksLink = plan.project ? `[${plan.project} links](../../../../links.md)` : "";

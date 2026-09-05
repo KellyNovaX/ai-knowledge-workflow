@@ -28,8 +28,8 @@ class ProjectSuggestModal extends SuggestModal<ProjectCardEntry> {
     this.setPlaceholder("搜索项目…");
   }
 
-  onOpen(): void {
-    super.onOpen();
+  async onOpen(): Promise<void> {
+    await super.onOpen();
     this.filteredProjects = this.allProjects;
     this.currentPage = 0;
     this.rerender();
@@ -37,7 +37,7 @@ class ProjectSuggestModal extends SuggestModal<ProjectCardEntry> {
 
   onClose(): void {
     this.pageEl?.remove();
-    setTimeout(() => {
+    window.setTimeout(() => {
       if (!this.settled) {
         this.settled = true;
         this.resolveProject(null);

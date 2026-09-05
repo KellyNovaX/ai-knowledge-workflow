@@ -40,8 +40,8 @@ export class TaskIdStore {
     }
 
     try {
-      const data = JSON.parse(await this.app.vault.adapter.read(this.dataPath));
-      return data && typeof data === "object" && !Array.isArray(data) ? data : {};
+      const data: unknown = JSON.parse(await this.app.vault.adapter.read(this.dataPath));
+      return isPluginData(data) ? data : {};
     } catch {
       return {};
     }
@@ -50,6 +50,10 @@ export class TaskIdStore {
   private async writePluginData(data: PluginData): Promise<void> {
     await this.app.vault.adapter.write(this.dataPath, `${JSON.stringify(data, null, 2)}\n`);
   }
+}
+
+function isPluginData(value: unknown): value is PluginData {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 function readLastTaskId(data: PluginData): number {
@@ -67,6 +71,8 @@ function findMaxTaskId(content: string): number {
 }
 
 function normalizeTaskId(value: unknown): number {
-  const taskId = typeof value === "number" ? value : Number.parseInt(String(value ?? ""), 10);
+  const taskId = typeof value === "number"
+    ? value
+    : typeof value === "string" ? Number.parseInt(value, 10) : 0;
   return Number.isInteger(taskId) && taskId > 0 ? taskId : 0;
 }

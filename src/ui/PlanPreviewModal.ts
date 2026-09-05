@@ -32,7 +32,7 @@ export class PlanPreviewModal extends Modal {
   onOpen(): void {
     const { contentEl } = this;
     contentEl.empty();
-    contentEl.createEl("h2", { text: "Plan Preview" });
+    contentEl.createEl("h2", { text: "Plan preview" });
 
     contentEl.createEl("p", {
       text: `Action: ${this.plan.action ? PLAN_ACTION_LABELS[this.plan.action] : "(none)"}`
@@ -65,7 +65,7 @@ export class PlanPreviewModal extends Modal {
       })
       .addButton((button) => {
         button
-          .setButtonText("Confirm Execute")
+          .setButtonText("Confirm execute")
           .setCta()
           .setDisabled(!this.preview.canExecute)
           .onClick(() => {
@@ -87,7 +87,7 @@ export class PlanPreviewModal extends Modal {
     container.createEl("h3", { text: "Dry-run operations" });
 
     if (operations.length === 0) {
-      container.createEl("p", { text: "(none)" });
+      container.createEl("p", { text: "(None)" });
       return;
     }
 
@@ -103,7 +103,7 @@ export class PlanPreviewModal extends Modal {
     container.createEl("h3", { text: title });
 
     if (items.length === 0) {
-      container.createEl("p", { text: "(none)" });
+      container.createEl("p", { text: "(None)" });
       return;
     }
 

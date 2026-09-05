@@ -1,12 +1,12 @@
 # 从这里开始
 
-这是 AI Knowledge Workflow 0.3.1 的空白知识库，没有示例任务或个人资料。
+这是 AI Knowledge Workflow 0.3.2 的空白知识库，没有示例任务或个人资料。
 
 1. 在 Obsidian 中选择“打开本地仓库”，打开这个文件夹。
 2. 到设置 → 第三方插件，启用 AI Knowledge Workflow。插件不会自动开启。
 3. 插件设置保持 AI agent 为 Manual，Vault root 留空。
-4. 打开命令面板，运行 AI Knowledge: Add General Task，创建第一条待办。
-5. 运行 AI Knowledge: Open Todo Board，查看和管理任务。
+4. 打开命令面板，运行 AI Knowledge: Add general task，创建第一条待办。
+5. 运行 AI Knowledge: Open todo board，查看和管理任务。
 
 项目与工作流不是第一步必需的。准备好真实项目资料后，再建立项目任务。
 

@@ -17,12 +17,11 @@ import { askPlanQuestions, QuestionModalResultKind } from "../ui/QuestionModal";
 import { PlanPreviewDecision, showPlanPreview } from "../ui/PlanPreviewModal";
 import {
   PlanConfidence,
-  PlanDecision,
   PlanValidationResult,
   WorkflowPlan
 } from "../types";
 import { AiKnowledgeWorkflowSettings, ModelProviderType } from "../types";
-import { INBOX_ROOT_PATH, isProcessableInboxFile } from "./InboxRules";
+import { isProcessableInboxFile } from "./InboxRules";
 
 const PROJECT_ROOT_PATH = "30-projects/";
 const TEXT_PREVIEW_LIMIT = 4000;
@@ -176,10 +175,11 @@ export class InboxProcessor {
     if (!result.executed) {
       this.state = InboxProcessingState.Blocked;
       new Notice(result.error ?? "Plan execution blocked.");
-      console.group("AI Knowledge: Process Inbox Item");
-      console.table(result.preview.blockers);
-      console.table(result.validationIssues);
-      console.groupEnd();
+      console.error("AI Knowledge: Plan execution blocked", {
+        state: this.state,
+        blockers: result.preview.blockers,
+        validationIssues: result.validationIssues
+      });
       return;
     }
 
@@ -194,27 +194,23 @@ export class InboxProcessor {
   private showValidationFailure(validation: PlanValidationResult): void {
     const messages = [...validation.errors, ...validation.blockingReasons];
     new Notice(messages[0] ?? "Plan validation failed.");
-    console.group("AI Knowledge: Manual Plan Validation");
-    console.table({
+    console.error("AI Knowledge: Plan validation failed", {
       state: this.state,
       errors: validation.errors,
       warnings: validation.warnings,
       blockingReasons: validation.blockingReasons
     });
-    console.groupEnd();
   }
 
   private showProviderFailure(error: unknown): void {
     if (error instanceof ModelProviderError) {
       new Notice(error.message);
-      console.group("AI Knowledge: Provider Failure");
-      console.table({
+      console.error("AI Knowledge: Provider failure", {
         state: this.state,
         code: error.code,
         message: error.message,
         details: error.details ?? ""
       });
-      console.groupEnd();
       return;
     }
 

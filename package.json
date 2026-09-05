@@ -1,13 +1,14 @@
 {
   "name": "ai-knowledge-workflow",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Obsidian workflow guardrails for the AI Knowledge Vault.",
   "main": "main.js",
   "scripts": {
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs --production",
     "dev": "node esbuild.config.mjs --watch",
     "package": "npm run build && node scripts/package-release.mjs",
-    "typecheck": "tsc -noEmit -skipLibCheck"
+    "typecheck": "tsc -noEmit -skipLibCheck",
+    "lint": "eslint main.ts src"
   },
   "keywords": [
     "obsidian",
@@ -18,8 +19,10 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.11.30",
-    "builtin-modules": "^3.3.0",
-    "esbuild": "^0.20.2",
+    "electron": "^44.2.0",
+    "esbuild": "^0.28.2",
+    "eslint": "^9.39.5",
+    "eslint-plugin-obsidianmd": "^0.4.2",
     "obsidian": "^1.5.12",
     "typescript": "^5.4.2"
   },
@@ -27,6 +30,6 @@
     "zod": "^3.22.4"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13.0"
   }
 }

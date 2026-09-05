@@ -122,7 +122,7 @@ export function renderTaskLine(task: PlanTask, options: TaskBoardAppendOptions =
 
 function formatTaskLink(path: string): string {
   const target = path.endsWith(".md") ? path : `${path}.md`;
-  const label = (target.split("/").pop()?.replace(/\.md$/i, "") || "任务入口").replace(/[\[\]]/g, "");
+  const label = (target.split("/").pop()?.replace(/\.md$/i, "") || "任务入口").replace(/[[\]]/g, "");
   const encodedTarget = target.split("/").map((segment) => encodeURIComponent(segment).replace(/[()]/g, (character) => `%${character.charCodeAt(0).toString(16).toUpperCase()}`)).join("/");
   return `[${label}](../${encodedTarget})`;
 }

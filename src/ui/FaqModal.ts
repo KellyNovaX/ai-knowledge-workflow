@@ -171,7 +171,7 @@ function renderSingleProjectPicker(parent: HTMLElement, options: SingleProjectPi
       "aria-label": "搜索项目"
     }
   });
-  const selected = group.createEl("div", {
+  const selected = group.createDiv({
     cls: "ai-knowledge-project-selected",
     text: options.selectedProject ? `已选：${options.selectedProject}` : "未选择项目"
   });

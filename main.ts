@@ -1,4 +1,4 @@
-import { FuzzySuggestModal, Menu, Notice, Platform, Plugin, TAbstractFile, TFile, TFolder, WorkspaceLeaf } from "obsidian";
+import { FuzzySuggestModal, Menu, Notice, Platform, Plugin, requireApiVersion, TAbstractFile, TFile, TFolder, WorkspaceLeaf } from "obsidian";
 import { z } from "zod";
 import { PLUGIN_ID, PLUGIN_NAME } from "./src/constants";
 import {
@@ -11,7 +11,7 @@ import {
 import {
   AiKnowledgeWorkflowSettings,
   TaskScope,
-  TaskStatus,
+  ModelProviderType,
   ValidationIssue,
   ValidationSeverity
 } from "./src/types";
@@ -40,7 +40,7 @@ import {
   confirmTaskCompletion,
   selectCompletableTask
 } from "./src/ui/CompleteTaskModal";
-import { BoardTask, BoardTaskWpsTarget, TASK_BOARD_PATH, TASK_DONE_PATH, TaskBoard } from "./src/vault/TaskBoard";
+import { BoardTask, BoardTaskWpsTarget, TASK_BOARD_PATH, TASK_DONE_PATH } from "./src/vault/TaskBoard";
 import {
   ValidateResultView,
   VALIDATE_RESULT_VIEW_TYPE
@@ -57,7 +57,7 @@ import {
   ProjectView,
   PROJECT_VIEW_TYPE
 } from "./src/ui/ProjectView";
-import { ProjectCardEntry, ProjectRepository } from "./src/vault/ProjectRepository";
+import { ProjectCardEntry } from "./src/vault/ProjectRepository";
 import { SkillActionId, SkillActions } from "./src/skills/SkillActions";
 import { AiWorkspaceLauncher } from "./src/workspace/AiWorkspaceLauncher";
 import { openCodexAppForProject, openCodexAppForTask, openCodexAppWithPrompt } from "./src/workspace/CodexAppLauncher";
@@ -78,6 +78,18 @@ const manifestSchema = z.object({
   id: z.literal(PLUGIN_ID),
   name: z.literal(PLUGIN_NAME)
 });
+
+const settingsSchema = z.object({
+  vaultRoot: z.string().catch(DEFAULT_SETTINGS.vaultRoot)
+    .transform((value) => value.trim() || DEFAULT_SETTINGS.vaultRoot),
+  provider: z.nativeEnum(ModelProviderType).catch(DEFAULT_SETTINGS.provider),
+  terminalApp: z.unknown().transform(normalizeTerminalApp),
+  codexCliPath: z.string().catch(DEFAULT_SETTINGS.codexCliPath),
+  customCliPath: z.string().catch(DEFAULT_SETTINGS.customCliPath),
+  defaultTaskStatus: z.unknown().transform(normalizeTaskStatus),
+  autoValidate: z.boolean().catch(DEFAULT_SETTINGS.autoValidate),
+  layoutDirection: z.unknown().transform(normalizeLayoutDirection)
+}).catch(() => ({ ...DEFAULT_SETTINGS }));
 
 enum WorkspaceViewType {
   Terminal = "terminal:terminal"
@@ -131,10 +143,10 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
       (leaf) => new ProjectView(leaf, this.buildProjectViewActions())
     );
 
-    this.addRibbonIcon("list-checks", "AI Knowledge Todo Board", () => {
+    this.addRibbonIcon("list-checks", "AI Knowledge todo board", () => {
       void this.activateTodoBoard();
     });
-    this.addRibbonIcon("folder-tree", "AI Knowledge Projects", () => {
+    this.addRibbonIcon("folder-tree", "AI Knowledge projects", () => {
       void this.activateProjects();
     });
     this.addRibbonIcon("badge-help", "AI Knowledge FAQ", () => {
@@ -142,7 +154,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     });
     this.addCommand({
       id: CommandId.OpenTodoBoard,
-      name: "AI Knowledge: Open Todo Board",
+      name: "AI Knowledge: Open todo board",
       callback: () => {
         void this.activateTodoBoard();
       }
@@ -150,7 +162,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.OpenDoneArchive,
-      name: "AI Knowledge: Open Completed Tasks",
+      name: "AI Knowledge: Open completed tasks",
       callback: () => {
         void this.openDoneArchive();
       }
@@ -166,7 +178,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.OpenProjects,
-      name: "AI Knowledge: Open Projects",
+      name: "AI Knowledge: Open projects",
       callback: () => {
         void this.activateProjects();
       }
@@ -174,7 +186,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.ValidateVault,
-      name: "AI Knowledge: Validate Vault",
+      name: "AI Knowledge: Validate vault",
       callback: async () => {
         await this.validateVault();
       }
@@ -182,7 +194,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.InitializeVault,
-      name: "AI Knowledge: Initialize Vault Structure",
+      name: "AI Knowledge: Initialize vault structure",
       callback: async () => {
         await this.initializeVaultStructure();
       }
@@ -190,7 +202,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.CreateWorkflow,
-      name: "AI Knowledge: Create Workflow",
+      name: "AI Knowledge: Create workflow",
       callback: async () => {
         await this.addDirectWorkflow();
       }
@@ -198,7 +210,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.AddTask,
-      name: "AI Knowledge: Create Project Task",
+      name: "AI Knowledge: Create project task",
       callback: async () => {
         await this.addDirectTask();
       }
@@ -206,7 +218,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.AddGeneralTask,
-      name: "AI Knowledge: Add General Task",
+      name: "AI Knowledge: Add general task",
       callback: async () => {
         await this.addDirectGeneralTask();
       }
@@ -214,7 +226,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.CompleteTask,
-      name: "AI Knowledge: Complete Task",
+      name: "AI Knowledge: Complete task",
       callback: async () => {
         await this.completeTask();
       }
@@ -222,7 +234,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.CopyActiveFileToAgent,
-      name: "AI Knowledge: Copy Active File to Agent",
+      name: "AI Knowledge: Copy active file to agent",
       callback: async () => {
         await this.copyActiveFileToAgent();
       }
@@ -230,7 +242,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.ValidateActiveTaskForDevelopment,
-      name: "AI Knowledge: Validate Active Task for Development",
+      name: "AI Knowledge: Validate active task for development",
       callback: async () => {
         await this.validateActiveTaskForDevelopment();
       }
@@ -238,7 +250,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.RepairTaskContextStructure,
-      name: "AI Knowledge: Repair Task Context Structure",
+      name: "AI Knowledge: Repair task context structure",
       callback: async () => {
         await this.repairTaskContextStructure();
       }
@@ -246,7 +258,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.MoveTask,
-      name: "AI Knowledge: Move Task",
+      name: "AI Knowledge: Move task",
       callback: async () => {
         await this.activateTodoBoard();
       }
@@ -254,7 +266,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.OrganizeInboxFolderWithAgent,
-      name: "AI Knowledge: Organize Inbox Folder with Agent",
+      name: "AI Knowledge: Organize inbox folder with agent",
       callback: async () => {
         await this.organizeInboxFolderWithAgent();
       }
@@ -262,7 +274,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.OrganizeInboxFolderWithCodexApp,
-      name: "AI Knowledge: Organize Inbox Folder with Codex App",
+      name: "AI Knowledge: Organize inbox folder with Codex app",
       callback: async () => {
         await this.organizeInboxFolderWithCodexApp();
       }
@@ -270,7 +282,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.CopyInboxFolderOrganizePrompt,
-      name: "AI Knowledge: Copy Inbox Folder Organize Prompt",
+      name: "AI Knowledge: Copy inbox folder organize prompt",
       callback: async () => {
         await this.copyInboxFolderOrganizePrompt();
       }
@@ -278,7 +290,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     this.addCommand({
       id: CommandId.OpenSettings,
-      name: "AI Knowledge: Open Settings",
+      name: "AI Knowledge: Open settings",
       callback: () => {
         this.openSettings();
       }
@@ -291,23 +303,15 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     );
   }
 
-  onunload(): void {
-    this.app.workspace.detachLeavesOfType(VALIDATE_RESULT_VIEW_TYPE);
-    this.app.workspace.detachLeavesOfType(TODO_BOARD_VIEW_TYPE);
-    this.app.workspace.detachLeavesOfType(PROJECT_VIEW_TYPE);
-    this.app.workspace.detachLeavesOfType(FAQ_VIEW_TYPE);
-  }
-
   async loadSettings(): Promise<void> {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-    this.settings.vaultRoot = this.settings.vaultRoot.trim() || DEFAULT_SETTINGS.vaultRoot;
-    this.settings.defaultTaskStatus = normalizeTaskStatus(this.settings.defaultTaskStatus);
-    this.settings.terminalApp = normalizeTerminalApp(this.settings.terminalApp);
-    this.settings.layoutDirection = normalizeLayoutDirection(this.settings.layoutDirection);
+    const savedSettings: unknown = await this.loadData();
+    this.settings = settingsSchema.parse(savedSettings);
   }
 
   async saveSettings(): Promise<void> {
-    await this.saveData(this.settings);
+    const savedData: unknown = await this.loadData();
+    const pluginData = z.record(z.unknown()).catch({}).parse(savedData);
+    await this.saveData({ ...pluginData, ...this.settings });
   }
 
   private async initializeVaultStructure(): Promise<void> {
@@ -368,9 +372,6 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
       `AI Knowledge vault validation found ${issues.length} issue(s): ` +
         `${blockers} blocker, ${errors} error, ${warnings} warning, ${infos} info.`
     );
-    console.group("AI Knowledge: Validate Vault");
-    console.table(issues);
-    console.groupEnd();
   }
 
   private async addDirectTask(): Promise<void> {
@@ -456,10 +457,6 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
     if (!result.executed) {
       new Notice(result.error ?? "Plan execution blocked.");
-      console.group("AI Knowledge: Direct Plan Execution");
-      console.table(result.preview.blockers);
-      console.table(result.validationIssues);
-      console.groupEnd();
       return decision;
     }
 
@@ -511,7 +508,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     const tasks = await completer.listCompletableTasks();
 
     if (tasks.length === 0) {
-      new Notice("No incomplete Doing/Todo/Pending Release tasks found.");
+      new Notice("No incomplete doing/todo/pending release tasks found.");
       return;
     }
 
@@ -688,7 +685,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
 
   private async openProjectInCustomCli(project: ProjectCardEntry): Promise<void> {
     if (!this.settings.customCliPath.trim()) {
-      new Notice("Configure Custom CLI command in AI Knowledge Workflow settings before opening a project terminal.");
+      new Notice("Configure custom CLI command in AI Knowledge Workflow settings before opening a project terminal.");
       return;
     }
     try {
@@ -822,7 +819,11 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
   ): Promise<void> {
     const leaf = this.app.workspace.getLeaf("tab");
     await leaf.openFile(file, openState);
-    await this.app.workspace.revealLeaf(leaf);
+    if (requireApiVersion("1.7.2")) {
+      await this.app.workspace.revealLeaf(leaf);
+    } else {
+      this.app.workspace.setActiveLeaf(leaf, { focus: true });
+    }
   }
 
   private getConfiguredVaultRoot(): string {
@@ -860,7 +861,11 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     if (!existing) {
       await leaf.setViewState({ type: viewType, active: true });
     }
-    await this.app.workspace.revealLeaf(leaf);
+    if (requireApiVersion("1.7.2")) {
+      await this.app.workspace.revealLeaf(leaf);
+    } else {
+      this.app.workspace.setActiveLeaf(leaf, { focus: true });
+    }
   }
 
   private async showValidateResults(
@@ -947,7 +952,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     menu.addSeparator();
     menu.addItem((item) => {
       item
-        .setTitle("Copy This Task to Agent")
+        .setTitle("Copy this task to agent")
         .setIcon("copy")
         .onClick(() => {
           void this.copyFileToAgent(file);
@@ -1068,7 +1073,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     menu.addSeparator();
     menu.addItem((item) => {
       item
-        .setTitle("Open AI Agent Here in Terminal")
+        .setTitle("Open AI agent here in terminal")
         .setIcon("terminal")
         .onClick(() => {
           void this.openAiWorkspace(file);
@@ -1078,7 +1083,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     if (file instanceof TFile) {
       menu.addItem((item) => {
         item
-          .setTitle("Open AI Agent Here with @ This File")
+          .setTitle("Open AI agent here with @ this file")
           .setIcon("file-terminal")
           .onClick(() => {
             void this.openAiWorkspace(file, true);

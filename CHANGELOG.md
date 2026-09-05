@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.2 — 2026-09-05
+
+- Address the community review: preserve workspace tabs when unloading, use APIs compatible with the declared minimum version, and replace direct styles with CSS classes.
+- Correct callback binding and asynchronous error handling, validate saved settings and task IDs, and remove unused code and diagnostic logs.
+- Add the official Obsidian lint configuration and include every source module in type checking.
+- Provide an English README while keeping the full Chinese guide; retain capability disclosures and both sharing ZIPs.
+- Replace the deprecated built-in module list with Node.js metadata and update the build dependency.
+
 ## 0.3.1 — 2026-09-05
 
 - 选择已有终端页时使用旧版公共 API，移除对较晚公开的 `WorkspaceLeaf.parent` 字段的依赖，最低 Obsidian 版本保持 1.5.0。

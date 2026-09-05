@@ -27,7 +27,7 @@ export class QuestionModal extends Modal {
   onOpen(): void {
     const { contentEl } = this;
     contentEl.empty();
-    contentEl.createEl("h2", { text: "Plan Questions" });
+    contentEl.createEl("h2", { text: "Plan questions" });
 
     for (const question of this.questions) {
       const setting = new Setting(contentEl).setName(question.question).setDesc(question.field);
@@ -64,7 +64,7 @@ export class QuestionModal extends Modal {
       })
       .addButton((button) => {
         button
-          .setButtonText("Submit Answers")
+          .setButtonText("Submit answers")
           .setCta()
           .onClick(() => {
             this.finish(QuestionModalResultKind.Submitted);

@@ -446,10 +446,6 @@
   width: 104px;
 }
 
-.ai-knowledge-hidden {
-  display: none !important;
-}
-
 .ai-knowledge-board-controls {
   align-items: center;
   display: flex;
@@ -1890,4 +1886,16 @@
   font-size: 0.78em;
   font-weight: 650;
   text-align: center;
+}
+
+/* Keep conditional controls hidden even when their normal layout uses flex or grid. */
+.ai-knowledge-todo-board .ai-knowledge-hidden,
+.ai-knowledge-project-view .ai-knowledge-hidden,
+.ai-knowledge-wps-modal .ai-knowledge-hidden {
+  display: none;
+}
+
+.ai-knowledge-manual-plan-input {
+  width: 100%;
+  height: 320px;
 }

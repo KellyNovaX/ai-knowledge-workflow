@@ -1,7 +1,7 @@
 {
   "id": "ai-knowledge-workflow",
   "name": "AI Knowledge Workflow",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "minAppVersion": "1.5.0",
   "description": "Organize project knowledge, track tasks, and prepare structured context for AI coding agents.",
   "author": "KellyNovaX",

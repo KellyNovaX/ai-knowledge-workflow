@@ -59,14 +59,14 @@ export class ProjectView extends ItemView {
   }
 
   private renderLoading(): void {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("ai-knowledge-project-view");
     container.createEl("p", { text: "刷新中...", cls: "ai-knowledge-muted" });
   }
 
   private renderError(message: string): void {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("ai-knowledge-project-view");
     container.createEl("p", { text: message, cls: "ai-knowledge-error" });
@@ -76,7 +76,7 @@ export class ProjectView extends ItemView {
     projects: ProjectCardEntry[],
     options: { focusSearch?: boolean } = {}
   ): void {
-    const container = this.containerEl.children[1];
+    const container = this.contentEl;
     container.empty();
     container.addClass("ai-knowledge-project-view");
 
@@ -85,7 +85,7 @@ export class ProjectView extends ItemView {
     const header = container.createDiv({ cls: "ai-knowledge-project-header" });
     const titleRow = header.createDiv({ cls: "ai-knowledge-project-title" });
     titleRow.createEl("h2", { text: "Projects" });
-    titleRow.createEl("span", { text: projects.length.toString(), cls: "ai-knowledge-kanban-count" });
+    titleRow.createSpan({ text: projects.length.toString(), cls: "ai-knowledge-kanban-count" });
     header.createEl("p", {
       text: "从项目 links.md 读取源码目录。",
       cls: "ai-knowledge-muted"
@@ -162,7 +162,7 @@ export class ProjectView extends ItemView {
     }
   }
 
-  private renderMainTabs(container: Element): void {
+  private renderMainTabs(container: HTMLElement): void {
     const tabs = container.createDiv({ cls: "ai-knowledge-main-tabs" });
     const tasksButton = tabs.createEl("button", { text: "Tasks" });
     const projectsButton = tabs.createEl("button", { text: "Projects" });
@@ -176,13 +176,13 @@ export class ProjectView extends ItemView {
     });
   }
 
-  private renderProjectCard(parent: Element, project: ProjectCardEntry): void {
+  private renderProjectCard(parent: HTMLElement, project: ProjectCardEntry): void {
     const card = parent.createDiv({
       cls: "ai-knowledge-task-card ai-knowledge-priority-p4 ai-knowledge-project-card"
     });
     const top = card.createDiv({ cls: "ai-knowledge-task-card-top" });
     const badges = top.createDiv({ cls: "ai-knowledge-task-card-badges" });
-    badges.createEl("span", {
+    badges.createSpan({
       text: "项目",
       cls: "ai-knowledge-task-type-badge ai-knowledge-task-type-project"
     });
@@ -197,7 +197,10 @@ export class ProjectView extends ItemView {
     });
     setIcon(indexButton, "book-open");
     indexButton.addEventListener("click", () => {
-      this.app.workspace.openLinkText(`${project.path}/index.md`, "");
+      void this.app.workspace.openLinkText(`${project.path}/index.md`, "").catch((error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error);
+        new Notice(`打开项目失败：${message}`);
+      });
     });
     this.renderActionButton(actions, "Codex", "app-window", project, () =>
       this.actions.openProjectInCodex(project)
@@ -206,21 +209,21 @@ export class ProjectView extends ItemView {
       this.actions.openProjectInCustomCli(project)
     );
 
-    card.createEl("div", { text: project.name, cls: "ai-knowledge-task-card-title" });
+    card.createDiv({ text: project.name, cls: "ai-knowledge-task-card-title" });
 
     const meta = card.createDiv({ cls: "ai-knowledge-task-card-meta" });
-    meta.createEl("span", {
+    meta.createSpan({
       text: project.path,
       cls: "ai-knowledge-task-meta-tag"
     });
-    meta.createEl("span", {
+    meta.createSpan({
       text: project.sourcePath ?? "未记录源码路径",
       cls: project.sourcePath ? "ai-knowledge-task-meta-tag" : "ai-knowledge-project-source-missing"
     });
   }
 
   private renderActionButton(
-    parent: Element,
+    parent: HTMLElement,
     label: string,
     icon: string,
     project: ProjectCardEntry,

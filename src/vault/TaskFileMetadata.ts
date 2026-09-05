@@ -169,7 +169,7 @@ function normalizeString(value: unknown): string | undefined {
 function removeEmptyValues(metadata: TaskFileMetadata): TaskFileMetadata {
   return Object.fromEntries(
     Object.entries(metadata).filter(([, value]) => value !== undefined && value !== "")
-  ) as TaskFileMetadata;
+  );
 }
 
 function formatYamlScalar(value: string): string {
