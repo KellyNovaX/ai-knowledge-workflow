@@ -10,6 +10,7 @@ const context = await esbuild.context({
     js: `/*! AI Knowledge Workflow — MIT License\n${readFileSync(new URL("./LICENSE", import.meta.url), "utf8")}\n${readFileSync(new URL("./THIRD_PARTY_NOTICES.md", import.meta.url), "utf8")}\n*/`
   },
   bundle: true,
+  loader: { ".md": "text", ".py": "text", ".yaml": "text", ".yml": "text" },
   entryPoints: ["main.ts"],
   external: [
     "obsidian",

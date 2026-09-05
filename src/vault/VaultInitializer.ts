@@ -1,4 +1,5 @@
 import { App } from "obsidian";
+import { COMPANION_SKILL_FILES, COMPANION_SKILLS_ROOT } from "../skills/CompanionSkillFiles";
 import { WorkflowType } from "../types";
 
 export interface VaultInitializationPlan {
@@ -9,6 +10,11 @@ export interface VaultInitializationPlan {
 export interface VaultInitializationResult {
   createdFolders: string[];
   createdFiles: string[];
+}
+
+enum InitializationPathKind {
+  File = "file",
+  Folder = "folder"
 }
 
 const STARTER_FOLDERS = [
@@ -141,7 +147,7 @@ const STARTER_FILES: Record<string, string> = {
   "rules/project-knowledge.md": `# 项目知识\n\n- 项目稳定知识放在 \`30-projects/<project>/\`。\n- links.md 保持轻量；环境事实写入 env.md；操作步骤写入 runbook.md。\n- 源码保持在独立源码仓库，只记录路径和入口。\n`,
   "10-tasks/board.md": `# Tasks\n\n## Doing\n\n## Todo\n\n## Pending Release\n\n## Waiting\n\n## Backlog\n`,
   "10-tasks/done.md": `# Tasks Done\n\n归档已完成事项，保留必要链接。\n`,
-  "30-projects/index.md": `# Projects\n\n项目知识入口索引。每个项目使用独立目录。\n\n当前没有项目，可直接创建通用任务。需要项目任务或工作流时，先在此目录建立真实项目的 AGENTS.md、index.md 和 links.md，或使用单独安装的配套项目知识技能生成。\n`,
+  "30-projects/index.md": `# Projects\n\n项目知识入口索引。每个项目使用独立目录。\n\n当前没有项目，可直接创建通用任务。需要项目任务或工作流时，先在此目录建立真实项目的 AGENTS.md、index.md 和 links.md，或让支持本地技能的 AI 助手读取[配套项目知识技能](../.agents/skills/ai-knowledge-project-onboarding/SKILL.md)后生成。初始化会补齐配套技能文件，不会执行脚本或自动配置 AI 助手；已有技能文件保持原样。\n`,
   "80-inbox/AGENTS.md": `# Inbox\n\n- 本目录保存尚未分类的原始输入。\n- 整理前保留原内容；确认归属后再移动。\n- 不在这里长期维护任务状态或执行记录。\n`,
   "90-templates/index.md": `# Templates\n\n供 AI Knowledge Workflow 创建项目任务和 workflow 使用。\n`,
   "90-templates/project-task-template/execution.md": EXECUTION_TEMPLATE,
@@ -190,17 +196,18 @@ export class VaultInitializer {
   constructor(private readonly app: App) {}
 
   async preview(): Promise<VaultInitializationPlan> {
+    const files = getInitializationFiles();
     const missingFolders: string[] = [];
     const missingFiles: string[] = [];
 
-    for (const folder of STARTER_FOLDERS) {
-      if (!(await this.app.vault.adapter.exists(folder))) {
+    for (const folder of getInitializationFolders(files)) {
+      if (!(await this.existsAs(folder, InitializationPathKind.Folder))) {
         missingFolders.push(folder);
       }
     }
 
-    for (const path of Object.keys(STARTER_FILES)) {
-      if (!(await this.app.vault.adapter.exists(path))) {
+    for (const path of Object.keys(files)) {
+      if (!(await this.existsAs(path, InitializationPathKind.File))) {
         missingFiles.push(path);
       }
     }
@@ -210,6 +217,7 @@ export class VaultInitializer {
 
   async initialize(): Promise<VaultInitializationResult> {
     const plan = await this.preview();
+    const files = getInitializationFiles();
     const createdFolders: string[] = [];
     const createdFiles: string[] = [];
 
@@ -219,10 +227,10 @@ export class VaultInitializer {
 
     for (const path of plan.missingFiles) {
       await this.ensureFolder(parentPath(path), createdFolders);
-      if (await this.app.vault.adapter.exists(path)) {
+      if (await this.existsAs(path, InitializationPathKind.File)) {
         continue;
       }
-      await this.app.vault.adapter.write(path, STARTER_FILES[path]);
+      await this.app.vault.adapter.write(path, files[path]);
       createdFiles.push(path);
     }
 
@@ -237,12 +245,53 @@ export class VaultInitializer {
     let current = "";
     for (const segment of path.split("/").filter(Boolean)) {
       current = current ? `${current}/${segment}` : segment;
-      if (await this.app.vault.adapter.exists(current)) {
+      if (await this.existsAs(current, InitializationPathKind.Folder)) {
         continue;
       }
       await this.app.vault.adapter.mkdir(current);
       createdFolders.push(current);
     }
+  }
+
+  private async existsAs(path: string, kind: InitializationPathKind): Promise<boolean> {
+    const stat = await this.app.vault.adapter.stat(path);
+    if (!stat) {
+      return false;
+    }
+    if (stat.type !== kind.toString()) {
+      throw new Error(`Cannot initialize ${path}: expected a ${kind}, but a ${stat.type} already exists.`);
+    }
+    return true;
+  }
+}
+
+function getInitializationFiles(): Readonly<Record<string, string>> {
+  assertRelativeVaultPath(COMPANION_SKILLS_ROOT);
+  for (const path of Object.keys(COMPANION_SKILL_FILES)) {
+    assertRelativeVaultPath(path);
+    if (!path.startsWith(`${COMPANION_SKILLS_ROOT}/`)) {
+      throw new Error(`Companion skill resource must be inside ${COMPANION_SKILLS_ROOT}: ${path}`);
+    }
+  }
+  return { ...STARTER_FILES, ...COMPANION_SKILL_FILES };
+}
+
+function getInitializationFolders(files: Readonly<Record<string, string>>): string[] {
+  const folders = new Set([...STARTER_FOLDERS, COMPANION_SKILLS_ROOT]);
+  for (const path of [...folders, ...Object.keys(files)]) {
+    let parent = parentPath(path);
+    while (parent) {
+      folders.add(parent);
+      parent = parentPath(parent);
+    }
+  }
+  return [...folders].sort(compareFolderDepth);
+}
+
+function assertRelativeVaultPath(path: string): void {
+  if (path.includes("\\") || path.includes(":") || path.includes("\0")
+    || path.split("/").some((part) => !part || part === "." || part === "..")) {
+    throw new Error(`Initialization resource must use a relative vault path: ${path}`);
   }
 }
 

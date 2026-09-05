@@ -1,6 +1,6 @@
 {
   "name": "ai-knowledge-workflow",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Obsidian workflow guardrails for the AI Knowledge Vault.",
   "main": "main.js",
   "scripts": {

@@ -85,9 +85,9 @@ async function copyPluginAssets(destination) {
   }
 }
 
-async function copySkill(source, destination) {
+async function verifyCompanionSkill(source, destination) {
   await requireDirectory(source);
-  await fs.mkdir(destination, { recursive: true });
+  await requireDirectory(destination);
   const names = (await fs.readdir(source)).sort();
   for (const name of names) {
     if (ignoredSkillNames.has(name)) continue;
@@ -97,10 +97,13 @@ async function copySkill(source, destination) {
     assert(!stat.isSymbolicLink(), `Refusing to package symlink: ${sourcePath}`);
     if (stat.isDirectory()) {
       assert(name !== "node_modules", `Unexpected dependencies in skill: ${sourcePath}`);
-      await copySkill(sourcePath, path.join(destination, name));
+      await verifyCompanionSkill(sourcePath, path.join(destination, name));
     } else {
       assert(skillExtensions.has(path.extname(name)), `Unapproved skill file type: ${sourcePath}`);
-      await copyRegularFile(sourcePath, path.join(destination, name));
+      const destinationPath = path.join(destination, name);
+      await requireRegularFile(destinationPath);
+      assert((await fs.readFile(sourcePath)).equals(await fs.readFile(destinationPath)),
+        `Bundled skill differs from its source: ${sourcePath}`);
     }
   }
 }
@@ -111,6 +114,7 @@ async function createStarter(workDirectory, starterDirectory, pluginId) {
     entryPoints: [path.join(projectRoot, "src/vault/VaultInitializer.ts")],
     outfile: initializerModule,
     bundle: true,
+    loader: { ".md": "text", ".py": "text", ".yaml": "text", ".yml": "text" },
     platform: "node",
     format: "esm",
     target: "node18",
@@ -125,6 +129,15 @@ async function createStarter(workDirectory, starterDirectory, pluginId) {
     return absolutePath;
   };
   const adapter = {
+    async stat(relativePath) {
+      try {
+        const entry = await fs.stat(resolveVaultPath(relativePath));
+        return { type: entry.isDirectory() ? "folder" : "file", ctime: entry.ctimeMs, mtime: entry.mtimeMs, size: entry.size };
+      } catch (error) {
+        if (error.code === "ENOENT") return null;
+        throw error;
+      }
+    },
     async exists(relativePath) {
       try {
         await fs.stat(resolveVaultPath(relativePath));
@@ -149,7 +162,7 @@ async function createStarter(workDirectory, starterDirectory, pluginId) {
   for (const skill of companionSkills) {
     const source = path.join(projectRoot, "companion-skills", skill);
     await requireRegularFile(path.join(source, "SKILL.md"));
-    await copySkill(source, path.join(starterDirectory, ".agents", "skills", skill));
+    await verifyCompanionSkill(source, path.join(starterDirectory, ".agents", "skills", skill));
   }
   await copyRegularFile(path.join(projectRoot, "docs", "START-HERE.md"), path.join(starterDirectory, "START-HERE.md"));
   return created;

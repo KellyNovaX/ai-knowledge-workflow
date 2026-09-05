@@ -20,26 +20,26 @@ Source repository: [KellyNovaX/ai-knowledge-workflow](https://github.com/KellyNo
 
 ## Installation
 
-AI Knowledge Workflow is available in the Obsidian community directory.
+AI Knowledge Workflow has a public listing in the Obsidian community directory. Availability in the desktop search results has not been confirmed. If **Add to Obsidian** does not open an installable entry, use the manual ZIP installation below.
 
 ### Install from the community directory
 
 1. Open the plugin's public listing and select **Add to Obsidian**.
 2. Follow the prompts in Obsidian to install and enable **AI Knowledge Workflow** in your chosen vault.
-3. Run **AI Knowledge: Initialize vault structure** from the command palette. Review the proposed files before confirming. Initialization only adds missing files; it does not overwrite existing content.
+3. Run **AI Knowledge: Initialize vault structure** from the command palette. Review the proposed files before confirming. Initialization adds missing vault files and the three companion skills under `.agents/skills/`; it does not overwrite existing content.
 
 ### Install manually in an existing vault
 
-1. Download and extract `ai-knowledge-workflow-0.3.2.zip`.
+1. Download and extract `ai-knowledge-workflow-0.3.3.zip`.
 2. Place the extracted `ai-knowledge-workflow` folder in your vault's `.obsidian/plugins/` directory. If your vault uses a custom configuration directory, use its `plugins/` subdirectory instead.
 3. Reload Obsidian and enable **AI Knowledge Workflow** under **Settings → Community plugins**.
-4. Run **AI Knowledge: Initialize vault structure** from the command palette. Review the files it proposes to create, then confirm. Initialization only adds missing files; it does not overwrite existing content.
+4. Run **AI Knowledge: Initialize vault structure** from the command palette. Review the files it proposes to create, then confirm. Initialization adds missing vault files and the three companion skills under `.agents/skills/`; it does not overwrite existing content.
 
-To update, replace `main.js`, `manifest.json`, and `styles.css`, and keep your own `data.json`. The installation package does not contain personal configuration.
+To update manually, replace `main.js`, `manifest.json`, and `styles.css`, and keep your own `data.json`. The installation package does not contain personal configuration. After updating an existing vault, run **AI Knowledge: Initialize vault structure** again to add missing skill files. Existing files are preserved and are not automatically updated.
 
 ### Start with an empty vault
 
-Download and extract `ai-knowledge-starter-0.3.2.zip`. In Obsidian, choose **Open folder as vault** and select the extracted vault folder. Read its `START-HERE.md`, then enable the plugin manually.
+Download and extract `ai-knowledge-starter-0.3.3.zip`. In Obsidian, choose **Open folder as vault** and select the extracted vault folder. Read its `START-HERE.md`, then enable the plugin manually.
 
 ## First steps
 
@@ -57,14 +57,19 @@ Download and extract `ai-knowledge-starter-0.3.2.zip`. In Obsidian, choose **Ope
 | `80-inbox/` | Raw input that has not been organized yet |
 | `90-templates/` | Templates for new tasks and workflows |
 | `rules/` | Vault instructions for AI assistants |
+| `.agents/skills/` | Companion skill instructions, templates, and Python scripts |
 
 The YAML `status` in each task entry is the source of task status; the plugin synchronizes the board and archive. Completing a task records `completed_at`. Reopening clears that timestamp, and completing the task again records a new one. Newly generated links use standard Markdown syntax; existing Wiki links can still be read.
 
 ## Optional companion AI skills
 
-The source repository includes three skills in `companion-skills/`: project onboarding, task management, and weekly summaries. They are installed separately from the Obsidian plugin. The plugin does not install them automatically.
+The plugin includes three companion skills: project onboarding, task management, and weekly summaries. Run **AI Knowledge: Initialize vault structure** to preview the three skills and their destination, `.agents/skills/`. After you confirm, initialization adds their missing instructions, templates, and Python scripts: 17 files in total. You do not need to download the skills separately, including when installing through Obsidian.
 
-Copy the three skill folders into your vault's `.agents/skills/` directory, then load them using your AI assistant's skill-discovery mechanism. The Starter package already includes these files; your AI assistant decides whether to read and execute them. Their scripts require Python 3.
+You can run initialization again in an existing vault to add missing files. It preserves every existing file and does not automatically update skills. The Starter package contains the same skill files. Their source is available in `companion-skills/` in the repository.
+
+Initialization works offline. It does not download or execute scripts, start an AI session, install Python or a CLI, or change global assistant settings. Your AI assistant controls whether it discovers, loads, and uses the skill files; creating them does not guarantee that a running assistant has loaded them.
+
+The plugin's basic features remain usable without AI or Python. Running the skill scripts requires Python 3. To use AI-assisted actions, separately install and configure your chosen CLI and any required account; external services may charge fees.
 
 The custom CLI command is empty by default. To use it, configure a complete non-interactive command that accepts prompts through standard input. The plugin does not append extra command arguments.
 
@@ -78,7 +83,7 @@ Requires Obsidian desktop 1.5.0 or later. Mobile devices are not supported.
 | --- | --- |
 | Local task and knowledge management | Implemented using desktop APIs; real-device validation on Windows and Linux is still pending |
 | Copy context to an assistant | Does not require a terminal plugin |
-| Run skills through Codex or a custom CLI | Install, sign in to, and configure the relevant CLI and companion skills yourself; external services may charge fees |
+| Run skills through Codex or a custom CLI | Prepare the relevant CLI and account, and have your assistant load the companion skills; external services may charge fees |
 | Embedded terminal in Obsidian | Uses the optional, separately installed Terminal community plugin; requires a configured POSIX shell; automatic launch is unavailable on Windows |
 | iTerm, Warp, and WPS automation | macOS only; requires the corresponding application; the operating system may request automation permission |
 | Codex application links | Requires an installed desktop application that handles the corresponding links |

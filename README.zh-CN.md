@@ -20,26 +20,26 @@ Organize project knowledge, track tasks, and prepare structured context for AI c
 
 ## 安装
 
-AI Knowledge Workflow 已在 Obsidian 社区目录上线。
+AI Knowledge Workflow 已有 Obsidian 社区目录公开展示页，客户端搜索是否已收录尚未确认。如果 **Add to Obsidian** 未能打开可安装的条目，请使用下方 ZIP 手动安装方式。
 
 ### 从社区目录安装
 
 1. 打开插件的公开展示页，点击 **Add to Obsidian**。
 2. 按 Obsidian 中的提示，在要使用的知识库中安装并启用 **AI Knowledge Workflow**。
-3. 在命令面板运行 **AI Knowledge: Initialize vault structure**，查看将要创建的内容并确认。初始化只补齐缺失文件，不覆盖已有内容。
+3. 在命令面板运行 **AI Knowledge: Initialize vault structure**，查看将要创建的内容并确认。初始化会补齐知识库文件和 `.agents/skills/` 下的三个配套技能，不覆盖已有内容。
 
 ### 在已有知识库中手动安装
 
-1. 取得发布包 `ai-knowledge-workflow-0.3.2.zip` 并解压。
+1. 取得发布包 `ai-knowledge-workflow-0.3.3.zip` 并解压。
 2. 将其中的 `ai-knowledge-workflow` 文件夹放入知识库的 `.obsidian/plugins/`。如果使用自定义配置目录，则放在该目录的 `plugins/` 下。
 3. 重新加载 Obsidian，在设置 → 第三方插件中启用 **AI Knowledge Workflow**。
-4. 在命令面板运行 **AI Knowledge: Initialize vault structure**，查看将要创建的内容并确认。初始化只补齐缺失文件，不覆盖已有内容。
+4. 在命令面板运行 **AI Knowledge: Initialize vault structure**，查看将要创建的内容并确认。初始化会补齐知识库文件和 `.agents/skills/` 下的三个配套技能，不覆盖已有内容。
 
-更新时替换 `main.js`、`manifest.json`、`styles.css`，保留自己的 `data.json`。安装包不包含个人配置。
+手动更新时替换 `main.js`、`manifest.json`、`styles.css`，保留自己的 `data.json`。安装包不包含个人配置。旧知识库更新后可再次运行 **AI Knowledge: Initialize vault structure**，补齐缺失的技能文件；已有文件保留，不会自动更新。
 
 ### 从零开始
 
-取得 `ai-knowledge-starter-0.3.2.zip`，解压后在 Obsidian 中选择“打开本地仓库”，选中解压的知识库文件夹。阅读其中的 `START-HERE.md`，手动启用插件即可。
+取得 `ai-knowledge-starter-0.3.3.zip`，解压后在 Obsidian 中选择“打开本地仓库”，选中解压的知识库文件夹。阅读其中的 `START-HERE.md`，手动启用插件即可。
 
 ## 第一次使用
 
@@ -57,14 +57,21 @@ AI Knowledge Workflow 已在 Obsidian 社区目录上线。
 | `80-inbox/` | 尚未整理的原始输入 |
 | `90-templates/` | 新任务和工作流模板 |
 | `rules/` | 提供给 AI 助手的知识库规则 |
+| `.agents/skills/` | 配套技能说明、模板和 Python 脚本 |
 
 任务入口的 YAML `status` 是状态来源；看板和归档由插件同步。完成时间写入 `completed_at`，重开清除，再次完成时重新记录。新生成链接采用标准 Markdown；已有 Wiki 链接仍可读取。
 
 ## 可选：配套 AI 技能
 
-源码中的 `companion-skills/` 提供项目资料生成、任务管理和周报三个技能。它们与 Obsidian 插件分别安装；插件不会自行安装它们。
+插件内置项目资料生成、任务管理和周报三个配套技能。运行 **AI Knowledge: Initialize vault structure**，预览会说明三个技能及目标目录 `.agents/skills/`；确认后补齐缺失的技能说明、模板和 Python 脚本，共 17 个文件。通过 Obsidian 安装插件的用户也无需另行下载技能。
 
-将三个技能文件夹复制到知识库的 `.agents/skills/`，再按所用 AI 助手的技能发现方式加载。Starter 已包含这些文件，是否读取和执行由 AI 助手决定。运行其中的脚本需要 Python 3。自定义 CLI 默认留空；如需使用，请填写能够从标准输入接收提示词的完整非交互命令，插件不会额外追加命令参数。后台技能执行继承 CLI 已有的权限与沙箱设置，不自动扩大写入权限；如果 CLI 只允许读取，请改用交互终端按提示授权。
+旧知识库可再次运行初始化补齐缺失文件。已有文件全部保留，技能不会自动更新。Starter 包包含完全相同的技能文件；源码位于仓库的 `companion-skills/`。
+
+初始化离线完成，不下载或执行脚本，不启动 AI 会话，不安装 Python 或 CLI，也不修改全局助手配置。技能是否被发现、加载和使用由 AI 助手决定；写入文件不代表正在运行的助手已经加载它们。
+
+插件基本功能仍不依赖 AI 或 Python。运行技能脚本需要自行准备 Python 3；使用 AI 协作功能还需自行安装、配置相应 CLI 和所需账号，外部服务可能收费。
+
+自定义 CLI 默认留空；如需使用，请填写能够从标准输入接收提示词的完整非交互命令，插件不会额外追加命令参数。后台技能执行继承 CLI 已有的权限与沙箱设置，不自动扩大写入权限；如果 CLI 只允许读取，请改用交互终端按提示授权。
 
 ## 平台与外部集成
 
@@ -74,7 +81,7 @@ AI Knowledge Workflow 已在 Obsidian 社区目录上线。
 | --- | --- |
 | 本地任务和知识管理 | 按桌面 API 实现；Windows/Linux 尚未进行真实设备验收 |
 | 复制上下文给助手 | 不依赖终端插件 |
-| Codex / 自定义 CLI 技能执行 | 需自行安装、登录并配置相应 CLI 和配套技能；服务可能收费 |
+| Codex / 自定义 CLI 技能执行 | 需自行准备相应 CLI 和账号，并让助手加载配套技能；服务可能收费 |
 | Obsidian 内嵌终端 | 可选的独立 Terminal 社区插件；需配置 POSIX shell；Windows 自动启动不可用 |
 | iTerm / Warp / WPS 自动化 | 仅 macOS，需对应软件；系统可能提示自动化授权 |
 | Codex 应用链接 | 需已安装能够处理对应链接的桌面应用 |

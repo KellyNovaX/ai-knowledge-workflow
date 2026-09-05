@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.3 — 2026-09-05
+
+- Bundle the three companion skills for project knowledge, task management, and weekly summaries as fixed resources in the plugin release.
+- Preview and confirm creation of missing skill files in the current vault's `.agents/skills/` when initializing; existing files are preserved, and initialized vaults can run the command again to add missing resources.
+- Do not download, execute, or automatically update skills during initialization. AI assistants, Python, and optional CLIs remain separate setup steps.
+- Detect conflicting file and folder paths before initialization writes, and explain cancellation, partial failure, and validation failure in the confirmation flow.
+- Build the Starter vault with the same initializer and verify every generated skill file against its source.
+
 ## 0.3.2 — 2026-09-05
 
 - Address the community review: preserve workspace tabs when unloading, use APIs compatible with the declared minimum version, and replace direct styles with CSS classes.

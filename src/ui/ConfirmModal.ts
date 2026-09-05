@@ -32,7 +32,7 @@ class ConfirmModal extends Modal {
   onOpen(): void {
     this.contentEl.empty();
     this.contentEl.createEl("h2", { text: this.title });
-    this.contentEl.createEl("p", { text: this.message });
+    this.contentEl.createEl("p", { text: this.message, cls: "ai-knowledge-confirm-message" });
 
     new Setting(this.contentEl)
       .addButton((button) =>

@@ -315,40 +315,61 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
   }
 
   private async initializeVaultStructure(): Promise<void> {
-    const initializer = new VaultInitializer(this.app);
-    const preview = await initializer.preview();
-    const missingEntries = [...preview.missingFolders, ...preview.missingFiles];
+    try {
+      const initializer = new VaultInitializer(this.app);
+      const preview = await initializer.preview();
+      const missingEntries = [...preview.missingFolders, ...preview.missingFiles];
 
-    if (missingEntries.length === 0) {
-      new Notice("AI Knowledge vault structure is already initialized.");
-      return;
+      if (missingEntries.length === 0) {
+        new Notice("知识库结构和配套技能文件均已齐全，已有文件保持原样。");
+        return;
+      }
+
+      const missingSkillFiles = preview.missingFiles.filter((path) => path.startsWith(".agents/skills/"));
+      const visibleEntries = missingEntries.slice(0, 12);
+      const remainingCount = missingEntries.length - visibleEntries.length;
+      const message = [
+        `将在当前知识库补齐 ${preview.missingFolders.length} 个目录和 ${preview.missingFiles.length} 个文件。`,
+        "已有文件不会覆盖。旧知识库也可以再次初始化，补齐缺失的结构和技能文件。",
+        "",
+        `配套技能保存在 .agents/skills/，本次需补齐 ${missingSkillFiles.length} 个技能文件：`,
+        "• 任务管理（ai-knowledge-task-management）：创建、更新和完成任务。",
+        "• 项目资料（ai-knowledge-project-onboarding）：从源码生成项目知识资料。",
+        "• 周报（ai-knowledge-weekly-summary）：汇总任务和代码改动。",
+        "",
+        "配套文件包含 Python 脚本，供 AI 助手按技能说明读取和执行。初始化只补齐文件，不会执行这些脚本。后续使用需有可用的 AI 助手和 Python 环境。",
+        "",
+        "本次补齐内容：",
+        ...visibleEntries.map((path) => `• ${path}`),
+        ...(remainingCount > 0 ? [`• 另有 ${remainingCount} 项`] : [])
+      ].join("\n");
+      const decision = await confirmAction(
+        this.app,
+        "初始化知识库和配套技能",
+        message,
+        "补齐缺失文件"
+      );
+
+      if (decision !== ConfirmDecision.Confirm) {
+        new Notice("已取消初始化，未写入文件。");
+        return;
+      }
+
+      const result = await initializer.initialize();
+      try {
+        await this.validateVault();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        new Notice(`文件已补齐，但自动校验未完成：${message}。请重新运行知识库校验。`, 10000);
+        return;
+      }
+      new Notice(
+        `初始化完成：创建了 ${result.createdFolders.length} 个目录和 ${result.createdFiles.length} 个文件。已有文件保持原样，配套脚本未执行。`
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      new Notice(`初始化未完成：${message}。可以重新运行初始化，继续补齐缺失文件；已有文件不会覆盖。`, 10000);
     }
-
-    const visibleEntries = missingEntries.slice(0, 12);
-    const remainingCount = missingEntries.length - visibleEntries.length;
-    const message = [
-      `Create ${preview.missingFolders.length} missing folders and ${preview.missingFiles.length} missing files.`,
-      "Existing files will not be overwritten.",
-      ...visibleEntries.map((path) => `- ${path}`),
-      ...(remainingCount > 0 ? [`- ...and ${remainingCount} more`] : [])
-    ].join("\n");
-    const decision = await confirmAction(
-      this.app,
-      "Initialize AI Knowledge Vault",
-      message,
-      "Create missing structure"
-    );
-
-    if (decision !== ConfirmDecision.Confirm) {
-      new Notice("Vault initialization cancelled.");
-      return;
-    }
-
-    const result = await initializer.initialize();
-    new Notice(
-      `Vault initialized: ${result.createdFolders.length} folders and ${result.createdFiles.length} files created.`
-    );
-    await this.validateVault();
   }
 
   private async validateVault(): Promise<void> {
