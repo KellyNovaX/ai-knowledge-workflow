@@ -1,0 +1,5 @@
+interface:
+  display_name: "AI Knowledge Weekly Summary"
+  short_description: "Summarize weekly work from vault evidence"
+  default_prompt: "Use $ai-knowledge-weekly-summary to prepare this week's evidence-backed work summary."
+

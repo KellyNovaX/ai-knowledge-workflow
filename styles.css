@@ -1,0 +1,1893 @@
+.ai-knowledge-sidebar,
+.ai-knowledge-validate-view,
+.ai-knowledge-faq-view,
+.ai-knowledge-todo-board {
+  padding: 14px;
+}
+
+.ai-knowledge-sidebar h2,
+.ai-knowledge-validate-view h2 {
+  margin: 0 0 14px;
+  font-size: 1.35em;
+  line-height: 1.2;
+}
+
+.ai-knowledge-sidebar h3 {
+  margin: 18px 0 8px;
+  font-size: 0.95em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.ai-knowledge-actions {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.ai-knowledge-actions button {
+  width: 100%;
+}
+
+.ai-knowledge-action-button {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: auto;
+  justify-content: center;
+  min-height: 48px;
+  padding: 8px 11px;
+  text-align: left;
+  white-space: normal;
+}
+
+.ai-knowledge-action-title {
+  display: block;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.ai-knowledge-action-desc {
+  color: var(--text-muted);
+  display: block;
+  font-size: 0.82em;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.ai-knowledge-project-picker {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.ai-knowledge-project-picker h3 {
+  margin: 0;
+}
+
+.ai-knowledge-project-picker p {
+  margin: 0;
+}
+
+.ai-knowledge-project-search {
+  width: 100%;
+}
+
+.ai-knowledge-project-selected {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 0.82em;
+  line-height: 1.35;
+  max-height: 58px;
+  overflow: auto;
+  padding: 6px 8px;
+}
+
+.ai-knowledge-project-results {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  display: grid;
+  gap: 2px;
+  max-height: 260px;
+  overflow: auto;
+  padding: 6px;
+}
+
+.ai-knowledge-project-option {
+  box-shadow: none;
+  height: auto;
+  justify-content: flex-start;
+  min-height: 30px;
+  overflow-wrap: anywhere;
+  padding: 5px 8px;
+  text-align: left;
+  white-space: normal;
+}
+
+.ai-knowledge-project-option.is-selected {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.ai-knowledge-project-checkbox {
+  align-items: center;
+  border-radius: 6px;
+  display: flex;
+  gap: 8px;
+  min-height: 30px;
+  padding: 5px 8px;
+}
+
+.ai-knowledge-project-checkbox:hover {
+  background: var(--background-modifier-hover);
+}
+
+.ai-knowledge-project-checkbox span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ai-knowledge-project-limit-hint {
+  color: var(--text-muted);
+  font-size: 0.78em;
+  padding: 4px 2px 0;
+}
+
+.ai-knowledge-faq-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-knowledge-faq-modal h2 {
+  margin: 0 0 2px;
+}
+
+.ai-knowledge-faq-modal .ai-knowledge-project-picker {
+  gap: 5px;
+  margin: 0 0 6px;
+}
+
+.ai-knowledge-faq-modal .ai-knowledge-project-selected {
+  max-height: 34px;
+  padding: 4px 8px;
+}
+
+.ai-knowledge-faq-modal .ai-knowledge-project-results {
+  max-height: 156px;
+  padding: 4px;
+}
+
+.ai-knowledge-faq-modal .ai-knowledge-project-option {
+  min-height: 26px;
+  padding: 3px 8px;
+}
+
+.ai-knowledge-faq-modal .setting-item {
+  padding: 8px 0;
+}
+
+.ai-knowledge-faq-modal .setting-item-control {
+  min-width: min(100%, 220px);
+}
+
+.ai-knowledge-faq-modal textarea {
+  width: 100%;
+}
+
+.ai-knowledge-faq-modal-actions {
+  background: var(--background-primary);
+  bottom: 0;
+  margin-top: 2px;
+  position: sticky;
+  z-index: 1;
+}
+
+.ai-knowledge-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ai-knowledge-metric {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 8px;
+  background: var(--background-secondary);
+}
+
+.ai-knowledge-metric-value {
+  font-size: 1.15em;
+  font-weight: 600;
+}
+
+.ai-knowledge-metric-label,
+.ai-knowledge-muted,
+.ai-knowledge-issue-meta {
+  color: var(--text-muted);
+}
+
+.ai-knowledge-task-list,
+.ai-knowledge-validation-list,
+.ai-knowledge-issue-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.ai-knowledge-task-list li,
+.ai-knowledge-validation-list li {
+  margin-left: 18px;
+}
+
+.ai-knowledge-issue {
+  border-left: 3px solid var(--background-modifier-border);
+  padding: 8px 10px;
+  background: var(--background-secondary);
+}
+
+.ai-knowledge-severity-blocker,
+.ai-knowledge-severity-error {
+  border-left-color: var(--text-error);
+}
+
+.ai-knowledge-severity-warning {
+  border-left-color: var(--text-warning);
+}
+
+.ai-knowledge-issue-message {
+  margin: 4px 0 8px;
+}
+
+.ai-knowledge-link-button {
+  width: 100%;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+.ai-knowledge-error {
+  color: var(--text-error);
+}
+
+.ai-knowledge-todo-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.ai-knowledge-todo-header h2 {
+  margin: 0;
+  font-size: 1.85em;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
+
+.ai-knowledge-todo-title {
+  display: grid;
+  gap: 5px;
+}
+
+.ai-knowledge-todo-title-bar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ai-knowledge-more-actions-button {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+.ai-knowledge-open-agent-button {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+.ai-knowledge-open-agent-icon {
+  align-items: center;
+  display: inline-flex;
+}
+
+.ai-knowledge-open-agent-icon svg {
+  height: 14px;
+  width: 14px;
+}
+
+.ai-knowledge-more-actions-icon {
+  align-items: center;
+  display: inline-flex;
+}
+
+.ai-knowledge-more-actions-icon svg {
+  height: 14px;
+  width: 14px;
+}
+
+.ai-knowledge-status-strip {
+  align-items: center;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.86em;
+}
+
+.ai-knowledge-status-strip strong {
+  color: var(--text-normal);
+  font-weight: 700;
+}
+
+.ai-knowledge-todo-actions-panel {
+  border-bottom: 1px solid var(--background-modifier-border);
+  display: grid;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding: 0 0 16px;
+}
+
+.ai-knowledge-action-group {
+  display: grid;
+  gap: 8px;
+}
+
+.ai-knowledge-action-group h3,
+.ai-knowledge-board-controls h3 {
+  color: var(--text-muted);
+  font-size: 0.82em;
+  font-weight: 750;
+  letter-spacing: 0;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.ai-knowledge-action-row {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.ai-knowledge-todo-board .ai-knowledge-action-button {
+  align-items: flex-start;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.88em;
+  font-weight: 700;
+  gap: 2px;
+  height: auto;
+  min-height: 52px;
+  padding: 8px 11px;
+  text-align: left;
+  white-space: normal;
+}
+
+.ai-knowledge-todo-board .ai-knowledge-action-desc {
+  display: block;
+  font-size: 0.78em;
+  line-height: 1.25;
+}
+
+.ai-knowledge-sort-group {
+  align-items: center;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+}
+
+.ai-knowledge-date-filter-group {
+  align-items: center;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  display: flex;
+  gap: 6px;
+  padding: 3px 6px 3px 3px;
+}
+
+.ai-knowledge-type-filter-group {
+  align-items: center;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  display: flex;
+  gap: 6px;
+  padding: 3px 6px 3px 3px;
+}
+
+.ai-knowledge-sort-label {
+  color: var(--text-muted);
+  font-size: 0.82em;
+  font-weight: 700;
+  padding: 0 6px;
+}
+
+.ai-knowledge-sort-group button {
+  box-shadow: none;
+  height: 28px;
+  padding: 0 10px;
+}
+
+.ai-knowledge-task-date-filter {
+  height: 28px;
+  min-height: 28px;
+  width: 142px;
+}
+
+.ai-knowledge-date-filter-mode {
+  height: 28px;
+  min-height: 28px;
+  width: 118px;
+}
+
+.ai-knowledge-type-filter-mode {
+  height: 28px;
+  min-height: 28px;
+  width: 104px;
+}
+
+.ai-knowledge-hidden {
+  display: none !important;
+}
+
+.ai-knowledge-board-controls {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.ai-knowledge-board-control-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.ai-knowledge-kanban {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(6, minmax(420px, 1fr));
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.ai-knowledge-kanban-column {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  min-height: 520px;
+  min-width: 420px;
+  padding: 12px;
+}
+
+.ai-knowledge-kanban-column-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ai-knowledge-kanban-column-heading {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.ai-knowledge-kanban-column-title {
+  font-size: 1.05em;
+  font-weight: 750;
+}
+
+.ai-knowledge-kanban-column-subtitle {
+  color: var(--text-muted);
+  font-size: 0.72em;
+  font-weight: 650;
+  line-height: 1.1;
+}
+
+.ai-knowledge-kanban-count {
+  background: var(--background-modifier-border);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 0.78em;
+  min-width: 22px;
+  padding: 2px 7px;
+  text-align: center;
+}
+
+.ai-knowledge-kanban-cards {
+  display: grid;
+  gap: 8px;
+}
+
+.ai-knowledge-kanban-pagination {
+  align-items: center;
+  border-top: 1px solid var(--background-modifier-border);
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.ai-knowledge-pagination-button {
+  flex: 0 0 auto;
+  height: 28px;
+  min-height: 28px;
+  padding: 0 10px;
+}
+
+.ai-knowledge-pagination-summary {
+  color: var(--text-muted);
+  flex: 1 1 auto;
+  font-size: 0.78em;
+  font-weight: 650;
+  min-width: 0;
+  text-align: center;
+}
+
+.ai-knowledge-kanban-cards > .ai-knowledge-muted {
+  align-items: center;
+  border: 1px dashed var(--background-modifier-border);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  min-height: 92px;
+  margin: 0;
+}
+
+.ai-knowledge-task-card {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-left: 4px solid var(--background-modifier-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-width: 0;
+  overflow: hidden;
+  padding: 12px 14px 13px;
+}
+
+.ai-knowledge-priority-p0 {
+  border-left-color: var(--text-error);
+}
+
+.ai-knowledge-priority-p1 {
+  border-left-color: #d65f3d;
+}
+
+.ai-knowledge-priority-p2 {
+  border-left-color: #d8a300;
+}
+
+.ai-knowledge-priority-p3 {
+  border-left-color: #6f8f46;
+}
+
+.ai-knowledge-priority-p4 {
+  border-left-color: var(--text-muted);
+}
+
+.ai-knowledge-task-card-row1 {
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ai-knowledge-task-card-row2 {
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ai-knowledge-task-card-row2 .ai-knowledge-task-card-title {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ai-knowledge-task-card-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ai-knowledge-task-card:hover .ai-knowledge-task-card-actions .ai-knowledge-task-link-icon {
+  opacity: 1;
+}
+
+.ai-knowledge-task-more-wrapper {
+  position: relative;
+}
+
+.ai-knowledge-task-more-menu {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  display: none;
+  min-width: 140px;
+  padding: 4px 0;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 100;
+}
+
+.ai-knowledge-task-more-menu.is-open {
+  display: block;
+}
+
+.ai-knowledge-task-more-item {
+  align-items: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.ai-knowledge-task-more-item:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.ai-knowledge-task-more-item svg {
+  height: 14px;
+  width: 14px;
+}
+
+.ai-knowledge-task-more-item-text {
+  font-size: 0.85em;
+}
+
+.ai-knowledge-task-more-item-danger {
+  color: #ef4444;
+}
+
+.ai-knowledge-task-more-item-danger:hover {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+}
+
+.ai-knowledge-priority-badge {
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 6px;
+  color: #cbd5e1;
+  font-size: 0.78em;
+  font-weight: 700;
+  padding: 1px 7px;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.ai-knowledge-task-type-badge {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  flex: 0 0 auto;
+  font-size: 0.78em;
+  font-weight: 750;
+  line-height: 1.25;
+  padding: 2px 6px;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.ai-knowledge-task-type-general {
+  background: rgba(148, 163, 184, 0.1);
+  border-color: rgba(148, 163, 184, 0.18);
+  color: #94a3b8;
+}
+
+.ai-knowledge-task-type-project {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #60a5fa;
+}
+
+.ai-knowledge-task-type-workflow {
+  background: rgba(255, 140, 0, 0.14);
+  border-color: rgba(255, 140, 0, 0.35);
+  color: #ff9b3d;
+}
+
+.ai-knowledge-task-title-row {
+  align-items: flex-start;
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ai-knowledge-task-card-title {
+  display: -webkit-box;
+  flex: 1 1 auto;
+  font-size: 0.95em;
+  font-weight: 700;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.26;
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.ai-knowledge-task-title-edit {
+  flex: 0 0 auto;
+  opacity: 0;
+}
+
+.ai-knowledge-task-card:hover .ai-knowledge-task-title-edit,
+.ai-knowledge-task-title-edit:focus-visible {
+  opacity: 0.72;
+}
+
+.ai-knowledge-task-card-meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 7px;
+  min-width: 0;
+}
+
+.ai-knowledge-task-id-tag,
+.ai-knowledge-task-created-tag,
+.ai-knowledge-task-due-tag {
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 6px;
+  color: #94a3b8;
+  cursor: default;
+  font-size: 0.73em;
+  font-weight: 550;
+  line-height: 1.3;
+  padding: 1px 6px;
+  user-select: none;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.ai-knowledge-task-id-tag {
+  color: rgba(148, 163, 184, 0.55);
+}
+
+.ai-knowledge-task-wps-tag {
+  background: rgba(20, 184, 166, 0.14);
+  border: 1px solid rgba(20, 184, 166, 0.28);
+  border-radius: 6px;
+  color: #2dd4bf;
+  cursor: pointer;
+  font-size: 0.73em;
+  font-weight: 650;
+  line-height: 1.3;
+  padding: 1px 6px;
+  user-select: none;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.ai-knowledge-task-wps-tag:hover {
+  background: rgba(20, 184, 166, 0.22);
+}
+
+.ai-knowledge-task-meta-tag {
+  align-items: center;
+  background: rgba(59, 130, 246, 0.11);
+  border: 1px solid rgba(96, 165, 250, 0.22);
+  border-radius: 6px;
+  color: #93c5fd;
+  cursor: default;
+  display: inline-flex;
+  font-size: 0.73em;
+  font-weight: 650;
+  gap: 4px;
+  line-height: 1.3;
+  min-width: 0;
+  overflow: hidden;
+  padding: 1px 6px;
+  user-select: none;
+}
+
+.ai-knowledge-task-meta-label {
+  color: rgba(191, 219, 254, 0.72);
+  flex: 0 0 auto;
+  font-weight: 600;
+}
+
+.ai-knowledge-task-meta-value {
+  color: #dbeafe;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ai-knowledge-task-meta-count {
+  background: rgba(147, 197, 253, 0.13);
+  border-radius: 999px;
+  color: #bfdbfe;
+  flex: 0 0 auto;
+  font-size: 0.88em;
+  line-height: 1;
+  padding: 1px 4px;
+}
+
+.ai-knowledge-task-wps-active {
+  background: rgba(20, 184, 166, 0.24);
+  border-color: rgba(20, 184, 166, 0.48);
+}
+
+.ai-knowledge-task-wps-block {
+  display: none;
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: rgba(20, 184, 166, 0.06);
+  border: 1px solid rgba(20, 184, 166, 0.12);
+  border-radius: 6px;
+  font-size: 0.82em;
+  color: var(--text-muted);
+  backdrop-filter: blur(8px);
+}
+
+.ai-knowledge-task-wps-expanded {
+  display: block;
+}
+
+.ai-knowledge-task-wps-detail {
+  padding: 1px 0;
+}
+
+.ai-knowledge-task-wps-url {
+  color: var(--text-faint);
+}
+
+.ai-knowledge-task-note-tag {
+  background: rgba(168, 85, 247, 0.14);
+  border: 1px solid rgba(168, 85, 247, 0.28);
+  border-radius: 6px;
+  color: #c084fc;
+  cursor: pointer;
+  font-size: 0.73em;
+  font-weight: 650;
+  line-height: 1.3;
+  padding: 1px 6px;
+  user-select: none;
+  backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.ai-knowledge-task-note-tag:hover {
+  background: rgba(168, 85, 247, 0.22);
+}
+
+.ai-knowledge-task-note-active {
+  background: rgba(168, 85, 247, 0.24);
+  border-color: rgba(168, 85, 247, 0.48);
+}
+
+.ai-knowledge-task-note-block {
+  display: none;
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: rgba(168, 85, 247, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.12);
+  border-radius: 6px;
+  font-size: 0.82em;
+  color: var(--text-muted);
+  backdrop-filter: blur(8px);
+}
+
+.ai-knowledge-task-note-expanded {
+  display: block;
+}
+
+.ai-knowledge-task-note-line {
+  padding: 1px 0;
+}
+
+.ai-knowledge-task-tag-empty {
+  opacity: 0.4;
+}
+
+.ai-knowledge-task-tag-empty:hover {
+  opacity: 0.7;
+}
+
+.ai-knowledge-task-title-editor,
+.ai-knowledge-task-note-editor {
+  margin-top: 6px;
+}
+
+.ai-knowledge-task-title-input {
+  background: var(--background-modifier-form-field);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  color: var(--text-normal);
+  font-size: 0.88em;
+  font-weight: 650;
+  height: 32px;
+  padding: 4px 8px;
+  width: 100%;
+}
+
+.ai-knowledge-task-title-input:focus {
+  border-color: var(--interactive-accent);
+  outline: none;
+}
+
+.ai-knowledge-task-note-textarea {
+  width: 100%;
+  min-height: 64px;
+  padding: 6px 8px;
+  background: var(--background-modifier-form-field);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  color: var(--text-normal);
+  font-size: 0.82em;
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.ai-knowledge-task-note-textarea:focus {
+  border-color: var(--interactive-accent);
+  outline: none;
+}
+
+.ai-knowledge-task-wps-editor {
+  margin-top: 6px;
+}
+
+.ai-knowledge-task-wps-input {
+  background: var(--background-modifier-form-field);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  color: var(--text-normal);
+  font-size: 0.82em;
+  height: 30px;
+  padding: 4px 8px;
+  width: 100%;
+}
+
+.ai-knowledge-task-wps-input:focus {
+  border-color: var(--interactive-accent);
+  outline: none;
+}
+
+.ai-knowledge-task-note-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  justify-content: flex-end;
+}
+
+.ai-knowledge-task-note-actions button {
+  font-size: 0.78em;
+  padding: 2px 10px;
+  border-radius: 4px;
+}
+
+.ai-knowledge-wps-modal h2 {
+  margin-bottom: 12px;
+  font-size: 1.1em;
+}
+
+.ai-knowledge-wps-modal-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ai-knowledge-wps-modal-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.ai-knowledge-wps-modal-label,
+.ai-knowledge-wps-modal-url {
+  padding: 4px 8px;
+  background: var(--background-modifier-form-field);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  color: var(--text-normal);
+  font-size: 0.88em;
+}
+
+.ai-knowledge-wps-modal-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.ai-knowledge-wps-modal-url {
+  flex: 2;
+  min-width: 0;
+}
+
+.ai-knowledge-wps-modal-label:focus,
+.ai-knowledge-wps-modal-url:focus {
+  border-color: var(--interactive-accent);
+  outline: none;
+}
+
+.ai-knowledge-wps-modal-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  flex: 0 0 24px;
+}
+
+.ai-knowledge-wps-modal-delete:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-error);
+}
+
+.ai-knowledge-wps-modal-delete svg {
+  height: 14px;
+  width: 14px;
+}
+
+.ai-knowledge-wps-modal-add {
+  font-size: 0.85em;
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+
+.ai-knowledge-wps-modal-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.ai-knowledge-task-link-icon {
+  align-items: center;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  display: inline-flex;
+  height: 24px;
+  justify-content: center;
+  min-height: 24px;
+  min-width: 24px;
+  opacity: 0.6;
+  padding: 0;
+  width: 24px;
+  flex: 0 0 24px;
+}
+
+.ai-knowledge-task-link-icon:hover {
+  background: var(--background-modifier-hover);
+  border-color: var(--background-modifier-border);
+  color: var(--text-normal);
+  opacity: 1;
+}
+
+.ai-knowledge-task-link-icon svg {
+  height: 14px;
+  width: 14px;
+}
+
+.ai-knowledge-task-meta-icon {
+  color: var(--text-accent);
+  height: 22px;
+  min-height: 22px;
+  min-width: 22px;
+  width: 22px;
+}
+
+.ai-knowledge-task-meta-icon svg {
+  height: 13px;
+  width: 13px;
+}
+
+.ai-knowledge-task-hidden-date-input {
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  width: 1px;
+}
+
+.ai-knowledge-task-select {
+  background: var(--background-secondary);
+  border-color: var(--background-modifier-border);
+  box-shadow: none;
+  font-size: 0.7em;
+  height: 24px;
+  min-height: 24px;
+  min-width: 0;
+  padding: 1px 14px 1px 5px;
+  width: auto;
+}
+
+.ai-knowledge-task-select:first-child {
+  width: 60px;
+}
+
+.ai-knowledge-task-select:last-child {
+  width: 68px;
+}
+
+.ai-knowledge-skill-output {
+  max-height: 360px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+
+.ai-knowledge-complete-task-line {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ai-knowledge-main-tabs {
+  align-items: center;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  display: inline-flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  padding: 3px;
+}
+
+.ai-knowledge-main-tabs button {
+  box-shadow: none;
+  height: 30px;
+  min-height: 30px;
+  padding: 0 14px;
+}
+
+.ai-knowledge-faq-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.ai-knowledge-faq-title {
+  display: grid;
+  gap: 5px;
+}
+
+.ai-knowledge-faq-title h2 {
+  font-size: 1.85em;
+  letter-spacing: 0;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.ai-knowledge-faq-title p {
+  margin: 0;
+}
+
+.ai-knowledge-faq-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.ai-knowledge-faq-action-button {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0 11px;
+  white-space: nowrap;
+}
+
+.ai-knowledge-faq-action-button svg {
+  height: 14px;
+  width: 14px;
+}
+
+.ai-knowledge-faq-controls {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ai-knowledge-faq-filter-mode {
+  height: 28px;
+  min-height: 28px;
+  width: 120px;
+}
+
+.ai-knowledge-faq-search {
+  flex: 1 1 260px;
+  max-width: 520px;
+  min-width: 220px;
+}
+
+.ai-knowledge-faq-metrics {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  margin-bottom: 14px;
+}
+
+.ai-knowledge-faq-list {
+  display: grid;
+  gap: 10px;
+}
+
+.ai-knowledge-faq-card {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.ai-knowledge-faq-card-top {
+  align-items: flex-start;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 9px;
+  min-width: 0;
+}
+
+.ai-knowledge-faq-badges {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ai-knowledge-faq-icon-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  gap: 3px;
+  margin-left: auto;
+}
+
+.ai-knowledge-faq-badge {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  font-size: 0.78em;
+  font-weight: 750;
+  line-height: 1.25;
+  padding: 2px 7px;
+}
+
+.ai-knowledge-faq-project {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.28);
+  color: #2563eb;
+}
+
+.ai-knowledge-faq-card-system {
+  background: rgba(217, 119, 6, 0.12);
+  border-color: rgba(217, 119, 6, 0.28);
+  color: #b45309;
+}
+
+.ai-knowledge-faq-question {
+  font-size: 1em;
+  font-weight: 750;
+  line-height: 1.25;
+  margin: 0 0 6px;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+.ai-knowledge-faq-answer {
+  color: var(--text-normal);
+  line-height: 1.45;
+  margin: 0;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+.ai-knowledge-faq-meta {
+  align-items: center;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.78em;
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.ai-knowledge-faq-meta span {
+  overflow-wrap: anywhere;
+}
+
+.ai-knowledge-project-view {
+  padding: 14px;
+}
+
+.ai-knowledge-project-header {
+  margin-bottom: 12px;
+}
+
+.ai-knowledge-project-title {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.ai-knowledge-project-title h2 {
+  font-size: 1.85em;
+  letter-spacing: 0;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.ai-knowledge-project-title p {
+  margin: 0;
+}
+
+.ai-knowledge-project-controls {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ai-knowledge-project-search-wrap,
+.ai-knowledge-task-search-wrap {
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex: 1 1 auto;
+  max-width: 260px;
+  min-width: 0;
+}
+
+.ai-knowledge-project-card-search,
+.ai-knowledge-task-card-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 28px;
+}
+
+.ai-knowledge-project-name-search {
+  max-width: 180px;
+}
+
+.ai-knowledge-project-card-list {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 340px));
+  justify-content: start;
+}
+
+.ai-knowledge-project-card {
+  max-width: 340px;
+  min-height: 112px;
+  width: 100%;
+}
+
+.ai-knowledge-search-clear {
+  position: absolute;
+  right: 2px;
+  align-items: center;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  display: inline-flex;
+  height: 22px;
+  justify-content: center;
+  min-height: 22px;
+  min-width: 22px;
+  padding: 0;
+  width: 22px;
+}
+
+.ai-knowledge-search-clear:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.ai-knowledge-search-clear svg {
+  height: 12px;
+  width: 12px;
+}
+
+/* Compact task board layout */
+.ai-knowledge-kanban {
+  gap: 10px;
+  grid-template-columns: repeat(6, minmax(400px, 1fr));
+}
+
+.ai-knowledge-kanban-column {
+  background: var(--background-primary-alt);
+  border-radius: 8px;
+  min-height: 480px;
+  min-width: 400px;
+  padding: 10px;
+}
+
+.ai-knowledge-kanban-column-header {
+  margin-bottom: 9px;
+}
+
+.ai-knowledge-kanban-cards {
+  gap: 6px;
+}
+
+.ai-knowledge-task-card {
+  background: var(--background-primary);
+  border-left-width: 3px;
+  box-shadow: none;
+  padding: 8px 9px 9px;
+}
+
+.ai-knowledge-task-card:hover {
+  border-color: var(--background-modifier-border-hover);
+}
+
+.ai-knowledge-task-card-top {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.ai-knowledge-task-identity {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  gap: 5px;
+  min-width: 0;
+}
+
+.ai-knowledge-task-card-actions {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 2px;
+}
+
+.ai-knowledge-task-card-actions .ai-knowledge-task-link-icon {
+  opacity: 0.75;
+}
+
+.ai-knowledge-task-danger-icon:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: var(--text-error);
+}
+
+.ai-knowledge-task-title-row {
+  margin-top: 6px;
+}
+
+.ai-knowledge-task-card-title {
+  -webkit-line-clamp: 2;
+  font-size: 0.9em;
+  font-weight: 650;
+  line-height: 1.32;
+  margin-top: 0;
+}
+
+.ai-knowledge-priority-badge,
+.ai-knowledge-task-type-badge,
+.ai-knowledge-task-id-tag,
+.ai-knowledge-task-created-tag,
+.ai-knowledge-task-due-tag,
+.ai-knowledge-task-summary-chip {
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.ai-knowledge-priority-badge {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 0.68em;
+  font-weight: 750;
+  line-height: 1.2;
+  padding: 1px 5px;
+}
+
+.ai-knowledge-priority-badge-p0 {
+  color: var(--text-error);
+}
+
+.ai-knowledge-priority-badge-p1 {
+  color: #d65f3d;
+}
+
+.ai-knowledge-priority-badge-p2 {
+  color: #b88400;
+}
+
+.ai-knowledge-task-type-badge {
+  background: transparent;
+  border-color: var(--background-modifier-border);
+  color: var(--text-muted);
+  font-size: 0.68em;
+  padding: 1px 5px;
+}
+
+.ai-knowledge-task-summary {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 7px;
+  min-width: 0;
+}
+
+.ai-knowledge-task-summary-chip {
+  align-items: center;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 5px;
+  color: var(--text-muted);
+  cursor: default;
+  display: inline-flex;
+  font-size: 0.68em;
+  font-weight: 550;
+  height: 19px;
+  justify-content: center;
+  line-height: 1.25;
+  max-width: 100%;
+  min-height: 19px;
+  overflow: hidden;
+  padding: 1px 5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ai-knowledge-task-date-chip {
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.ai-knowledge-task-date-chip:hover {
+  background: var(--background-modifier-hover);
+  border-color: var(--background-modifier-border-hover);
+  color: var(--text-normal);
+}
+
+.ai-knowledge-task-summary-tools {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.ai-knowledge-task-summary .ai-knowledge-task-note-tag,
+.ai-knowledge-task-summary .ai-knowledge-task-wps-tag,
+.ai-knowledge-task-summary .ai-knowledge-task-meta-tag {
+  align-items: center;
+  backdrop-filter: none;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 0.68em;
+  height: 19px;
+  line-height: 1.25;
+  min-height: 19px;
+}
+
+.ai-knowledge-task-summary .ai-knowledge-task-meta-tag {
+  max-width: min(190px, 100%);
+}
+
+.ai-knowledge-task-card > .ai-knowledge-task-note-block,
+.ai-knowledge-task-card > .ai-knowledge-task-wps-block {
+  backdrop-filter: none;
+  font-size: 0.78em;
+}
+
+.ai-knowledge-task-detail-toggle {
+  align-items: center;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  display: inline-flex;
+  font-size: 0.72em;
+  gap: 3px;
+  height: 22px;
+  justify-content: flex-start;
+  margin-top: 5px;
+  min-height: 22px;
+  padding: 0 2px;
+}
+
+.ai-knowledge-task-detail-toggle:hover {
+  background: transparent;
+  color: var(--text-normal);
+}
+
+.ai-knowledge-task-detail-icon {
+  align-items: center;
+  display: inline-flex;
+  transition: transform 120ms ease;
+}
+
+.ai-knowledge-task-detail-icon svg {
+  height: 12px;
+  width: 12px;
+}
+
+.ai-knowledge-task-detail-toggle.is-open .ai-knowledge-task-detail-icon {
+  transform: rotate(180deg);
+}
+
+.ai-knowledge-task-detail-panel {
+  border-top: 1px solid var(--background-modifier-border);
+  display: none;
+  margin-top: 7px;
+  padding-top: 8px;
+}
+
+.ai-knowledge-task-detail-panel.is-open {
+  display: grid;
+  gap: 8px;
+}
+
+.ai-knowledge-task-detail-controls {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+}
+
+.ai-knowledge-task-detail-panel .ai-knowledge-task-note-block,
+.ai-knowledge-task-detail-panel .ai-knowledge-task-wps-block {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  display: block;
+  font-size: 0.78em;
+  margin-top: 0;
+  padding: 6px 7px;
+}
+
+.ai-knowledge-task-detail-label {
+  color: var(--text-normal);
+  font-size: 0.82em;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.ai-knowledge-task-empty-line {
+  color: var(--text-faint);
+  padding: 1px 0 4px;
+}
+
+.ai-knowledge-task-inline-button {
+  font-size: 0.74em;
+  height: 22px;
+  margin-top: 5px;
+  min-height: 22px;
+  padding: 0 8px;
+}
+
+.ai-knowledge-task-wps-detail {
+  align-items: center;
+  display: flex;
+  gap: 5px;
+  min-width: 0;
+}
+
+.ai-knowledge-task-wps-detail > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ai-knowledge-task-detail-meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-width: 0;
+}
+
+.ai-knowledge-task-select {
+  font-size: 0.72em;
+  height: 25px;
+  min-height: 25px;
+}
+
+.ai-knowledge-task-link-icon {
+  border-radius: 5px;
+  height: 23px;
+  min-height: 23px;
+  min-width: 23px;
+  width: 23px;
+}
+
+.ai-knowledge-project-refresh {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 6px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0 11px;
+  white-space: nowrap;
+}
+
+.ai-knowledge-project-refresh svg {
+  height: 14px;
+  width: 14px;
+}
+
+.ai-knowledge-task-project-select {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ai-knowledge-task-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 10px 0;
+  width: 100%;
+}
+
+.ai-knowledge-task-tab {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  box-shadow: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.8em;
+  font-weight: 600;
+  height: 28px;
+  min-height: 28px;
+  padding: 0 12px;
+  white-space: nowrap;
+  transition: all 80ms ease;
+}
+
+.ai-knowledge-task-tab:hover {
+  background: var(--background-modifier-hover);
+  border-color: var(--background-modifier-border-hover);
+  color: var(--text-normal);
+}
+
+.ai-knowledge-task-tab.is-active {
+  background: var(--interactive-accent);
+  border-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.ai-knowledge-task-status-badge {
+  border-radius: 10px;
+  font-size: 0.68em;
+  font-weight: 650;
+  line-height: 1;
+  margin-left: 6px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.ai-knowledge-status-doing {
+  background: rgba(34, 197, 94, 0.14);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+}
+
+.ai-knowledge-status-todo {
+  background: rgba(59, 130, 246, 0.14);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
+}
+
+.ai-knowledge-status-pending_release {
+  background: rgba(168, 85, 247, 0.14);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #c084fc;
+}
+
+.ai-knowledge-status-waiting {
+  background: rgba(234, 179, 8, 0.14);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  color: #facc15;
+}
+
+.ai-knowledge-status-backlog {
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #94a3b8;
+}
+
+.ai-knowledge-status-done {
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.18);
+  color: #6ee7b7;
+}
+
+.ai-knowledge-task-pagination {
+  align-items: center;
+  border-top: 1px solid var(--background-modifier-border);
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  padding: 8px 12px;
+}
+
+.ai-knowledge-task-pagination .ai-knowledge-pagination-button {
+  flex: 0 0 auto;
+  height: 28px;
+  min-height: 28px;
+  padding: 0 10px;
+}
+
+.ai-knowledge-task-pagination .ai-knowledge-pagination-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.ai-knowledge-task-pagination .ai-knowledge-pagination-summary {
+  color: var(--text-muted);
+  flex: 1 1 auto;
+  font-size: 0.78em;
+  font-weight: 650;
+  text-align: center;
+}

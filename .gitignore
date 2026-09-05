@@ -1,0 +1,10 @@
+node_modules/
+main.js
+*.map
+dist/
+.release/
+.DS_Store
+data.json
+.env
+.env.*
+!data.example.json

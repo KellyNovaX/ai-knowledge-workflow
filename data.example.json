@@ -1,0 +1,10 @@
+{
+  "vaultRoot": "",
+  "provider": "manual",
+  "terminalApp": "obsidian",
+  "codexCliPath": "codex",
+  "defaultTaskStatus": "todo",
+  "autoValidate": true,
+  "layoutDirection": "vertical",
+  "customCliPath": ""
+}

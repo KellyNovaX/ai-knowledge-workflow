@@ -1,0 +1,5 @@
+interface:
+  display_name: "AI Knowledge Project Onboarding"
+  short_description: "Generate reusable project knowledge from source"
+  default_prompt: "Use $ai-knowledge-project-onboarding to create or update project knowledge from a source repository."
+

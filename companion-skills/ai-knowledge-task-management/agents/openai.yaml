@@ -1,0 +1,5 @@
+interface:
+  display_name: "AI Knowledge Task Management"
+  short_description: "Manage active and archived vault tasks safely"
+  default_prompt: "Use $ai-knowledge-task-management to create, move, complete, reopen, or find tasks in this vault."
+
