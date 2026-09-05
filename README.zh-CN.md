@@ -20,9 +20,15 @@ Organize project knowledge, track tasks, and prepare structured context for AI c
 
 ## 安装
 
-本版本是社区目录提交前的发布准备版；目前可手动安装。后续正式上架状态以 Obsidian 社区目录为准。
+AI Knowledge Workflow 已在 Obsidian 社区目录上线。
 
-### 已有知识库
+### 从社区目录安装
+
+1. 打开插件的公开展示页，点击 **Add to Obsidian**。
+2. 按 Obsidian 中的提示，在要使用的知识库中安装并启用 **AI Knowledge Workflow**。
+3. 在命令面板运行 **AI Knowledge: Initialize vault structure**，查看将要创建的内容并确认。初始化只补齐缺失文件，不覆盖已有内容。
+
+### 在已有知识库中手动安装
 
 1. 取得发布包 `ai-knowledge-workflow-0.3.2.zip` 并解压。
 2. 将其中的 `ai-knowledge-workflow` 文件夹放入知识库的 `.obsidian/plugins/`。如果使用自定义配置目录，则放在该目录的 `plugins/` 下。

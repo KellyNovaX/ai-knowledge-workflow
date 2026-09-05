@@ -20,9 +20,15 @@ Source repository: [KellyNovaX/ai-knowledge-workflow](https://github.com/KellyNo
 
 ## Installation
 
-This release is being prepared for the community directory and can currently be installed manually. Check the Obsidian community directory for the current listing status.
+AI Knowledge Workflow is available in the Obsidian community directory.
 
-### Install in an existing vault
+### Install from the community directory
+
+1. Open the plugin's public listing and select **Add to Obsidian**.
+2. Follow the prompts in Obsidian to install and enable **AI Knowledge Workflow** in your chosen vault.
+3. Run **AI Knowledge: Initialize vault structure** from the command palette. Review the proposed files before confirming. Initialization only adds missing files; it does not overwrite existing content.
+
+### Install manually in an existing vault
 
 1. Download and extract `ai-knowledge-workflow-0.3.2.zip`.
 2. Place the extracted `ai-knowledge-workflow` folder in your vault's `.obsidian/plugins/` directory. If your vault uses a custom configuration directory, use its `plugins/` subdirectory instead.
