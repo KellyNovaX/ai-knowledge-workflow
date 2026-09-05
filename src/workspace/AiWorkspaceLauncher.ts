@@ -1,4 +1,4 @@
-import { App, Platform, TAbstractFile, TFile, WorkspaceLeaf } from "obsidian";
+import { App, Platform, TAbstractFile, TFile } from "obsidian";
 import { spawn } from "child_process";
 import { mkdirSync, writeFileSync } from "fs";
 import { homedir } from "os";
@@ -199,24 +199,11 @@ export class AiWorkspaceLauncher {
   }
 
   private activateExistingTerminalTargetLeaf(): void {
-    const terminalLeaves = this.app.workspace.getLeavesOfType(WorkspaceViewType.Terminal);
-    const existingTerminalLeaf = terminalLeaves.find((leaf) => leaf.parent !== this.getFirstRootLeaf()?.parent);
+    const existingTerminalLeaf = this.app.workspace.getLeavesOfType(WorkspaceViewType.Terminal)[0];
 
     if (existingTerminalLeaf) {
       this.app.workspace.setActiveLeaf(existingTerminalLeaf, { focus: true });
     }
-  }
-
-  private getFirstRootLeaf(): WorkspaceLeaf | null {
-    let firstLeaf: WorkspaceLeaf | null = null;
-
-    this.app.workspace.iterateRootLeaves((leaf) => {
-      if (!firstLeaf) {
-        firstLeaf = leaf;
-      }
-    });
-
-    return firstLeaf;
   }
 
   private async waitForNewTerminalLeaf(previousCount: number): Promise<import("obsidian").WorkspaceLeaf | null> {
