@@ -13,7 +13,7 @@ npm ci
 npm run package
 ```
 
-创建 GitHub Release，本次标签必须为 `0.3.3`，与 manifest 版本完全一致，不加 `v`。把 `dist/main.js`、`dist/manifest.json`、`dist/styles.css` 分别作为附件上传；不要只上传 ZIP。可同时附上两个 ZIP 与 SHA256SUMS.txt，方便手动安装和分享。
+创建 GitHub Release，本次标签必须为 `0.3.4`，与 manifest 版本完全一致，不加 `v`。把 `dist/main.js`、`dist/manifest.json`、`dist/styles.css` 分别作为附件上传；不要只上传 ZIP。可同时附上两个 ZIP 与 SHA256SUMS.txt，方便手动安装和分享。
 
 更新版本时同步 manifest、package.json、package-lock.json、versions.json 和 CHANGELOG，然后重新构建。不要替换已经发布标签下的文件掩盖版本变化。
 

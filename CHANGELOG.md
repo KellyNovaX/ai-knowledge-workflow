@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.4 — 2026-09-12
 
 - Preserve nested parentheses and escaped brackets in task source links, retain incomplete source text, and keep source names from being interpreted as task metadata. Verified with 64 temporary runtime and DOM checks.
 - Add a task source app setting for WPS or Feishu; all existing and new task cards follow the selected app without rewriting their source data.

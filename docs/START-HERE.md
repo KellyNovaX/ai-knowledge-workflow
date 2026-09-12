@@ -1,6 +1,6 @@
 # 从这里开始
 
-这是 AI Knowledge Workflow 0.3.3 的空白知识库，没有示例任务或个人资料。
+这是 AI Knowledge Workflow 0.3.4 的空白知识库，没有示例任务或个人资料。
 
 1. 在 Obsidian 中选择“打开本地仓库”，打开这个文件夹。
 2. 到设置 → 第三方插件，启用 AI Knowledge Workflow。插件不会自动开启。

@@ -30,7 +30,7 @@ AI Knowledge Workflow has a public listing in the Obsidian community directory. 
 
 ### Install manually in an existing vault
 
-1. Download and extract `ai-knowledge-workflow-0.3.3.zip`.
+1. Download and extract `ai-knowledge-workflow-0.3.4.zip`.
 2. Place the extracted `ai-knowledge-workflow` folder in your vault's `.obsidian/plugins/` directory. If your vault uses a custom configuration directory, use its `plugins/` subdirectory instead.
 3. Reload Obsidian and enable **AI Knowledge Workflow** under **Settings → Community plugins**.
 4. Run **AI Knowledge: Initialize vault structure** from the command palette. Review the files it proposes to create, then confirm. Initialization adds missing vault files and the three companion skills under `.agents/skills/`; it does not overwrite existing content.
@@ -39,7 +39,7 @@ To update manually, replace `main.js`, `manifest.json`, and `styles.css`, and ke
 
 ### Start with an empty vault
 
-Download and extract `ai-knowledge-starter-0.3.3.zip`. In Obsidian, choose **Open folder as vault** and select the extracted vault folder. Read its `START-HERE.md`, then enable the plugin manually.
+Download and extract `ai-knowledge-starter-0.3.4.zip`. In Obsidian, choose **Open folder as vault** and select the extracted vault folder. Read its `START-HERE.md`, then enable the plugin manually.
 
 ## First steps
 

@@ -30,7 +30,7 @@ AI Knowledge Workflow 已有 Obsidian 社区目录公开展示页，客户端搜
 
 ### 在已有知识库中手动安装
 
-1. 取得发布包 `ai-knowledge-workflow-0.3.3.zip` 并解压。
+1. 取得发布包 `ai-knowledge-workflow-0.3.4.zip` 并解压。
 2. 将其中的 `ai-knowledge-workflow` 文件夹放入知识库的 `.obsidian/plugins/`。如果使用自定义配置目录，则放在该目录的 `plugins/` 下。
 3. 重新加载 Obsidian，在设置 → 第三方插件中启用 **AI Knowledge Workflow**。
 4. 在命令面板运行 **AI Knowledge: Initialize vault structure**，查看将要创建的内容并确认。初始化会补齐知识库文件和 `.agents/skills/` 下的三个配套技能，不覆盖已有内容。
@@ -39,7 +39,7 @@ AI Knowledge Workflow 已有 Obsidian 社区目录公开展示页，客户端搜
 
 ### 从零开始
 
-取得 `ai-knowledge-starter-0.3.3.zip`，解压后在 Obsidian 中选择“打开本地仓库”，选中解压的知识库文件夹。阅读其中的 `START-HERE.md`，手动启用插件即可。
+取得 `ai-knowledge-starter-0.3.4.zip`，解压后在 Obsidian 中选择“打开本地仓库”，选中解压的知识库文件夹。阅读其中的 `START-HERE.md`，手动启用插件即可。
 
 ## 第一次使用
 
