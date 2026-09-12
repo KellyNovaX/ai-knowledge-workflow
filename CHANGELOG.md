@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Open files with the system default app on a file-explorer double-click, while preserving single-click behavior and folder expansion.
+
 ## 0.3.3 — 2026-09-05
 
 - Bundle the three companion skills for project knowledge, task management, and weekly summaries as fixed resources in the plugin release.

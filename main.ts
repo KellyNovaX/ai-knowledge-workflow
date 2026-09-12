@@ -92,6 +92,7 @@ const settingsSchema = z.object({
 }).catch(() => ({ ...DEFAULT_SETTINGS }));
 
 enum WorkspaceViewType {
+  FileExplorer = "file-explorer",
   Terminal = "terminal:terminal"
 }
 
@@ -301,6 +302,63 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
         this.addFileMenuItems(menu, file);
       })
     );
+    this.registerFileExplorerDoubleClick();
+  }
+
+  private registerFileExplorerDoubleClick(): void {
+    if (!Platform.isDesktopApp) {
+      return;
+    }
+
+    const registeredContainers = new WeakSet<HTMLElement>();
+    let active = true;
+    this.register(() => { active = false; });
+    const registerExplorers = () => {
+      if (!active) {
+        return;
+      }
+      for (const leaf of this.app.workspace.getLeavesOfType(WorkspaceViewType.FileExplorer)) {
+        const container = leaf.view.containerEl;
+        if (registeredContainers.has(container)) {
+          continue;
+        }
+
+        registeredContainers.add(container);
+        this.registerDomEvent(container, "dblclick", (event) => {
+          const target = event.targetNode;
+          if (event.button !== 0 || !target?.instanceOf(HTMLElement)) {
+            return;
+          }
+          if (target.closest("input, textarea, [contenteditable]")) {
+            return;
+          }
+
+          const fileRow = target.closest<HTMLElement>(".nav-file-title[data-path]");
+          const path = fileRow?.dataset.path;
+          const file = path ? this.app.vault.getAbstractFileByPath(path) : null;
+          if (!(file instanceof TFile)) {
+            return;
+          }
+
+          // 文件树双击使用系统默认程序，单击保留原有行为。
+          event.preventDefault();
+          event.stopPropagation();
+          void this.openFileWithDefaultApp(file);
+        }, { capture: true });
+      }
+    };
+
+    this.app.workspace.onLayoutReady(registerExplorers);
+    this.registerEvent(this.app.workspace.on("layout-change", registerExplorers));
+  }
+
+  private async openFileWithDefaultApp(file: TFile): Promise<void> {
+    try {
+      await new DefaultAppOpener(this.app).openFile(file);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      new Notice(`Failed to open file with default app: ${message}`);
+    }
   }
 
   async loadSettings(): Promise<void> {
@@ -922,14 +980,7 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
       menu.addItem((item) => item
         .setTitle("Open with system default app")
         .setIcon("external-link")
-        .onClick(async () => {
-          try {
-            await new DefaultAppOpener(this.app).openFile(file);
-          } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            new Notice(`Failed to open file with default app: ${message}`);
-          }
-        }));
+        .onClick(() => this.openFileWithDefaultApp(file)));
     }
   }
 

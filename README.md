@@ -88,7 +88,9 @@ Requires Obsidian desktop 1.5.0 or later. Mobile devices are not supported.
 | iTerm, Warp, and WPS automation | macOS only; requires the corresponding application; the operating system may request automation permission |
 | Codex application links | Requires an installed desktop application that handles the corresponding links |
 
-By default, the plugin does not modify the Terminal plugin's configuration, take over file-list clicks, or force changes to sidebar and tab layouts.
+Double-click a file in the file explorer to open it with the system default app, including Markdown, TXT, and PDF files. Single clicks keep Obsidian's normal behavior, and folders still expand and collapse normally. The context menu also provides **Open with system default app**.
+
+By default, the plugin does not modify the Terminal plugin's configuration or force changes to sidebar and tab layouts.
 
 ## Privacy, network use, and local file access
 

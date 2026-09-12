@@ -86,7 +86,9 @@ AI Knowledge Workflow 已有 Obsidian 社区目录公开展示页，客户端搜
 | iTerm / Warp / WPS 自动化 | 仅 macOS，需对应软件；系统可能提示自动化授权 |
 | Codex 应用链接 | 需已安装能够处理对应链接的桌面应用 |
 
-默认不会修改 Terminal 插件配置，不会接管文件列表点击或强制调整侧栏和标签布局。
+在文件列表中双击文件，可用系统默认程序打开（包括 Markdown、TXT、PDF 等）；单击仍按 Obsidian 原有方式打开，文件夹仍可正常展开和收起。右键菜单也提供 **Open with system default app**。
+
+默认不会修改 Terminal 插件配置或强制调整侧栏和标签布局。
 
 ## 隐私、网络与本地文件访问
 
