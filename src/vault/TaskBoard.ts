@@ -29,7 +29,7 @@ const TASK_ID_PATTERN = /\b(?:tid:(\d+)|id:([pwg]-\d+))\b/;
 const TASK_SCOPE_PATTERN = /#task\/(general|project|workflow)\b/;
 const LEGACY_GENERAL_TAG_PATTERN = /(?:^|\s)#general\b/g;
 const PROJECT_METADATA_PATTERN = /[；;]\s*关联项目\s*[：:]\s*([^#\n]*?)(?=\s+due:|\s+wps:|\s+#task\/|\s+id:|\s+tid:|\s+created:|$)/;
-const WPS_TARGET_PATTERN = /(?:^|\s)wps:(?:\[([^\]]+)]\(([^)]+)\)|"((?:\\.|[^"\\])*)"|([^\s]+))/g;
+const WPS_TARGET_PREFIX_PATTERN = /(?:^|\s)wps:/g;
 const LINK_PATTERN = /(?:\[\[([^|\]#]+)(?:#[^|\]]*)?(?:\|([^\]]+))?\]\]|\[([^\]]*)]\(([^)#]+)(?:#[^)]+)?\))/g;
 const EXTERNAL_LINK_PATTERN = /^[a-z][a-z0-9+.-]*:/i;
 
@@ -1234,6 +1234,8 @@ function parseTaskMetadata(body: string): {
   projects: string[];
   text: string;
 } {
+  const source = extractWpsTargets(body);
+  body = source.text;
   const dueMatch = body.match(DUE_DATE_PATTERN);
   const createdAtMatch = body.match(BOARD_CREATED_AT_PATTERN);
   const taskIdMatch = body.match(TASK_ID_PATTERN);
@@ -1242,7 +1244,7 @@ function parseTaskMetadata(body: string): {
   const createdAt = createdAtMatch ? createdAtMatch[1] : null;
   const taskId = taskIdMatch ? taskIdMatch[2] ?? taskIdMatch[1] : null;
   const taskScope = scopeMatch ? (scopeMatch[1] as TaskScope) : null;
-  const wpsTargets = extractWpsTargets(body);
+  const wpsTargets = source.targets;
   const projects = extractProjectMetadata(body);
   const text = body
     .replace(PROJECT_METADATA_PATTERN, "")
@@ -1251,7 +1253,6 @@ function parseTaskMetadata(body: string): {
     .replace(TASK_ID_PATTERN, "")
     .replace(TASK_SCOPE_PATTERN, "")
     .replace(LEGACY_GENERAL_TAG_PATTERN, "")
-    .replace(WPS_TARGET_PATTERN, "")
     .split("\n")
     .map((line) => line.replace(/[ \t]+/g, " ").trimEnd())
     .join("\n")
@@ -1268,15 +1269,59 @@ function extractProjectMetadata(body: string): string[] {
   );
 }
 
-function extractWpsTargets(body: string): BoardTaskWpsTarget[] {
+function extractWpsTargets(body: string): { targets: BoardTaskWpsTarget[]; text: string } {
   const targets: BoardTaskWpsTarget[] = [];
-
-  for (const match of body.matchAll(WPS_TARGET_PATTERN)) {
-    const label = match[1] ?? match[3]?.replace(/\\(["\\])/g, "$1") ?? match[4];
-    addWpsTarget(targets, label, match[2] ?? null);
+  const pattern = new RegExp(WPS_TARGET_PREFIX_PATTERN);
+  const text: string[] = [];
+  let previousEnd = 0;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(body))) {
+    const start = pattern.lastIndex;
+    let end = start;
+    let label = "";
+    let url: string | null = null;
+    const labelEnd = findSourceDelimiterEnd(body, start, "[", "]");
+    const urlEnd = labelEnd !== -1 ? findSourceDelimiterEnd(body, labelEnd + 1, "(", ")") : -1;
+    if (urlEnd !== -1) {
+      label = body.slice(start + 1, labelEnd).replace(/\\([\\[\]])/g, "$1");
+      url = body.slice(labelEnd + 2, urlEnd).replace(/\\([\\()])/g, "$1");
+      end = urlEnd + 1;
+    } else {
+      const quoted = body.slice(start).match(/^"((?:\\.|[^"\\\r\n])*)"/);
+      const simple = quoted ? null : body.slice(start).match(/^\S+/);
+      label = quoted ? quoted[1].replace(/\\(["\\])/g, "$1") : simple?.[0] ?? "";
+      end += quoted?.[0].length ?? simple?.[0].length ?? 0;
+    }
+    if (end === start || !label.trim()) {
+      pattern.lastIndex = end;
+      continue;
+    }
+    addWpsTarget(targets, label, url);
+    text.push(body.slice(previousEnd, match.index), " ");
+    previousEnd = end;
+    pattern.lastIndex = end;
   }
+  text.push(body.slice(previousEnd));
+  return { targets, text: text.join("") };
+}
 
-  return targets;
+// 按嵌套层级寻找闭合符，避免链接中的括号截断来源地址。
+function findSourceDelimiterEnd(text: string, start: number, open: string, close: string): number {
+  if (text[start] !== open) return -1;
+  let depth = 0;
+  for (let i = start; i < text.length; i++) {
+    const char = text[i];
+    if (char === "\r" || char === "\n") return -1;
+    if (char === "\\") {
+      if (text[i + 1] === "\r" || text[i + 1] === "\n") return -1;
+      i++;
+    } else if (char === open) {
+      depth++;
+    } else if (char === close && --depth === 0) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 function addWpsTarget(targets: BoardTaskWpsTarget[], label: string, url: string | null): void {
@@ -1304,7 +1349,9 @@ function formatWpsTargets(targets: BoardTaskWpsTarget[]): string {
 
 function formatWpsTarget(target: BoardTaskWpsTarget): string {
   if (target.url) {
-    return `wps:[${target.label}](${target.url})`;
+    const label = target.label.replace(/[\\[\]]/g, "\\$&");
+    const url = target.url.replace(/[\\()]/g, "\\$&");
+    return `wps:[${label}](${url})`;
   }
 
   const escapedLabel = target.label.replace(/\\/g, "\\\\").replace(/"/g, '\\"');

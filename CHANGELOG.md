@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Preserve nested parentheses and escaped brackets in task source links, retain incomplete source text, and keep source names from being interpreted as task metadata. Verified with 64 temporary runtime and DOM checks.
 - Add a task source app setting for WPS or Feishu; all existing and new task cards follow the selected app without rewriting their source data.
 - Open Feishu source searches through the desktop client and retain copied search text as a fallback. Preserve legacy source metadata and avoid duplicate parsing of quoted names and linked targets.
 - Open files with the system default app on a file-explorer double-click, while preserving single-click behavior and folder expansion.
