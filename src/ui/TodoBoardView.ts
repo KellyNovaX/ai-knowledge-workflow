@@ -2,6 +2,7 @@ import { App, ItemView, Menu, Modal, Notice, TFile, WorkspaceLeaf, setIcon } fro
 import { ConfirmDecision, confirmAction } from "./ConfirmModal";
 import {
   TASK_PRIORITY_ORDER,
+  TASK_SOURCE_APP_LABELS,
   TASK_SCOPE_LABELS,
   TASK_STATUS_LABELS,
   TASK_STATUS_ORDER,
@@ -10,6 +11,7 @@ import {
 import { SkillActionId } from "../skills/SkillActions";
 import {
   TaskPriority,
+  TaskSourceApp,
   TaskScope,
   TaskStatus,
   ValidationIssue,
@@ -94,7 +96,9 @@ export interface TodoBoardActions {
   copyTaskToAgent?(task: BoardTask): Promise<void>;
   openTaskInAgent?(task: BoardTask): Promise<void>;
   openTaskInCodexApp?(task: BoardTask): Promise<void>;
-  openWpsChat?(target: BoardTaskWpsTarget): Promise<void>;
+  getTaskSourceApp(): TaskSourceApp;
+  canOpenTaskSource(): boolean;
+  openTaskSource(target: BoardTaskWpsTarget): Promise<void>;
   runSkillAction?(actionId: SkillActionId): Promise<void>;
   openAiAgentInVault?(): Promise<void>;
   openSettings(): void;
@@ -781,10 +785,11 @@ export class TodoBoardView extends ItemView {
       attr: { title: "单击查看 / 双击编辑" }
     });
 
-    const wpsTag = summary.createSpan({
+    const sourceLabel = TASK_SOURCE_APP_LABELS[this.actions.getTaskSourceApp()];
+    const sourceTag = summary.createSpan({
       text: task.wpsTargets.length > 0
-        ? `WPS:${task.wpsTargets.map(t => t.label.length > 10 ? t.label.slice(0, 10) + "…" : t.label).join(",")}`
-        : "WPS",
+        ? `${sourceLabel}:${task.wpsTargets.map(t => t.label.length > 10 ? t.label.slice(0, 10) + "…" : t.label).join(",")}`
+        : sourceLabel,
       cls: "ai-knowledge-task-wps-tag" + (task.wpsTargets.length === 0 ? " ai-knowledge-task-tag-empty" : ""),
       attr: { title: task.wpsTargets.length > 0 ? "单击查看 / 编辑" : "单击编辑" }
     });
@@ -840,49 +845,49 @@ export class TodoBoardView extends ItemView {
       });
     }
 
-    const wpsBlock = card.createDiv({ cls: "ai-knowledge-task-wps-block" });
+    const sourceBlock = card.createDiv({ cls: "ai-knowledge-task-wps-block" });
     if (task.wpsTargets.length > 0) {
-      const targetLine = wpsBlock.createDiv({ cls: "ai-knowledge-task-wps-detail" });
+      const targetLine = sourceBlock.createDiv({ cls: "ai-knowledge-task-wps-detail" });
       targetLine.createSpan({ text: task.wpsTargets.map((target) => target.label).join("，") });
-      if (this.actions.openWpsChat) {
-        const openWpsChatButton = createTaskIconButton(
+      if (this.actions.canOpenTaskSource()) {
+        const openTaskSourceButton = createTaskIconButton(
           targetLine,
           "message-circle",
-          `打开 WPS 协作：${task.wpsTargets[0].label}`,
-          `WPS 协作：${task.wpsTargets[0].label}`,
+          `打开 ${sourceLabel}：${task.wpsTargets[0].label}`,
+          `${sourceLabel}：${task.wpsTargets[0].label}`,
           "ai-knowledge-task-meta-icon"
         );
-        openWpsChatButton.addEventListener("click", () => {
-          void this.openWpsChat(task.wpsTargets[0]);
+        openTaskSourceButton.addEventListener("click", () => {
+          void this.openTaskSource(task.wpsTargets[0]);
         });
       }
     }
     if (!isArchived) {
-      const editWpsButton = wpsBlock.createEl("button", {
-        text: "编辑 WPS",
+      const editSourceButton = sourceBlock.createEl("button", {
+        text: `编辑 ${sourceLabel}`,
         cls: "ai-knowledge-task-inline-button"
       });
-      editWpsButton.addEventListener("click", (e) => {
+      editSourceButton.addEventListener("click", (e) => {
         e.stopPropagation();
-        this.startWpsEditing(card, task);
+        this.startSourceEditing(card, task);
       });
     }
 
-    wpsTag.addEventListener("click", (e) => {
+    sourceTag.addEventListener("click", (e) => {
       e.stopPropagation();
       if (task.wpsTargets.length > 0) {
-        wpsBlock.classList.toggle("ai-knowledge-task-wps-expanded");
-        wpsTag.classList.toggle("ai-knowledge-task-wps-active");
+        sourceBlock.classList.toggle("ai-knowledge-task-wps-expanded");
+        sourceTag.classList.toggle("ai-knowledge-task-wps-active");
       } else if (!isArchived) {
-        this.startWpsEditing(card, task);
+        this.startSourceEditing(card, task);
       }
     });
 
     if (!isArchived) {
-      wpsTag.addEventListener("dblclick", (e) => {
+      sourceTag.addEventListener("dblclick", (e) => {
         e.stopPropagation();
         e.preventDefault();
-        this.startWpsEditing(card, task);
+        this.startSourceEditing(card, task);
       });
     }
 
@@ -1114,17 +1119,18 @@ export class TodoBoardView extends ItemView {
     }
   }
 
-  private startWpsEditing(card: HTMLDivElement, task: BoardTask): void {
+  private startSourceEditing(card: HTMLDivElement, task: BoardTask): void {
     const existingEditor = card.querySelector(".ai-knowledge-task-wps-editor");
     if (existingEditor) return;
 
-    const wpsBlock = card.querySelector<HTMLElement>(".ai-knowledge-task-wps-block");
-    wpsBlock?.addClass("ai-knowledge-hidden");
+    const sourceBlock = card.querySelector<HTMLElement>(".ai-knowledge-task-wps-block");
+    sourceBlock?.addClass("ai-knowledge-hidden");
 
+    const sourceLabel = TASK_SOURCE_APP_LABELS[this.actions.getTaskSourceApp()];
     const editor = card.createDiv({ cls: "ai-knowledge-task-wps-editor" });
     const input = editor.createEl("input", {
       cls: "ai-knowledge-task-wps-input",
-      attr: { type: "text", "aria-label": "编辑 WPS 名称", placeholder: "WPS 名称" }
+      attr: { type: "text", "aria-label": `编辑 ${sourceLabel} 名称`, placeholder: `${sourceLabel} 名称` }
     });
     input.value = task.wpsTargets[0]?.label ?? "";
 
@@ -1134,25 +1140,30 @@ export class TodoBoardView extends ItemView {
 
     saveButton.addEventListener("click", () => {
       const label = input.value.trim();
-      void this.updateTaskWpsTargets(task, label ? [{ label, url: null }] : []);
+      const original = task.wpsTargets[0];
+      const remaining = task.wpsTargets.slice(1);
+      const targets = label
+        ? [{ label, url: label === original?.label ? original.url : null }, ...remaining]
+        : remaining;
+      void this.updateTaskWpsTargets(task, targets);
     });
 
     cancelButton.addEventListener("click", () => {
       editor.remove();
-      wpsBlock?.removeClass("ai-knowledge-hidden");
+      sourceBlock?.removeClass("ai-knowledge-hidden");
     });
   }
 
   private async updateTaskWpsTargets(task: BoardTask, wpsTargets: BoardTaskWpsTarget[]): Promise<void> {
     try {
       await new TaskBoard(this.app).updateTaskWpsTargets({ task, wpsTargets });
-      new Notice("WPS 协作目标已更新。");
+      new Notice("任务来源已更新。");
       await this.refresh();
       await this.actions.validateVault();
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      new Notice(`更新 WPS 目标失败：${message}`);
-      console.error("AI Knowledge: update task WPS targets failed", error);
+      new Notice(`更新任务来源失败：${message}`);
+      console.error("AI Knowledge: update task source failed", error);
     }
   }
 
@@ -1238,13 +1249,13 @@ export class TodoBoardView extends ItemView {
     await this.actions.openTaskInCodexApp(task);
   }
 
-  private async openWpsChat(target: BoardTaskWpsTarget): Promise<void> {
-    if (!this.actions.openWpsChat) {
-      new Notice("Open WPS chat is unavailable.");
+  private async openTaskSource(target: BoardTaskWpsTarget): Promise<void> {
+    if (!this.actions.canOpenTaskSource()) {
+      new Notice("当前平台不支持打开所选来源应用。");
       return;
     }
 
-    await this.actions.openWpsChat(target);
+    await this.actions.openTaskSource(target);
   }
 
   private async populateProjectSelect(select: HTMLSelectElement, task: BoardTask): Promise<void> {

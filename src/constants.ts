@@ -7,6 +7,7 @@ import {
   TaskScope,
   TaskPriority,
   TaskStatus,
+  TaskSourceApp,
   TerminalApp,
   ValidationSeverity,
   WorkflowType
@@ -25,6 +26,11 @@ export const TERMINAL_APP_LABELS: Record<TerminalApp, string> = {
   [TerminalApp.Iterm]: "iTerm",
   [TerminalApp.Warp]: "Warp",
   [TerminalApp.Obsidian]: "Obsidian Terminal"
+};
+
+export const TASK_SOURCE_APP_LABELS: Record<TaskSourceApp, string> = {
+  [TaskSourceApp.Wps]: "WPS",
+  [TaskSourceApp.Feishu]: "飞书"
 };
 
 export const LAYOUT_DIRECTION_LABELS: Record<LayoutDirection, string> = {

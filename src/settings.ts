@@ -7,6 +7,7 @@ import {
   MODEL_PROVIDER_LABELS,
   normalizeTaskStatusValue,
   TASK_STATUS_LABELS,
+  TASK_SOURCE_APP_LABELS,
   TERMINAL_APP_LABELS
 } from "./constants";
 import {
@@ -14,6 +15,7 @@ import {
   LayoutDirection,
   ModelProviderType,
   TaskStatus,
+  TaskSourceApp,
   TerminalApp
 } from "./types";
 
@@ -21,6 +23,7 @@ export const DEFAULT_SETTINGS: AiKnowledgeWorkflowSettings = {
   vaultRoot: DEFAULT_VAULT_ROOT,
   provider: ModelProviderType.Manual,
   terminalApp: TerminalApp.Obsidian,
+  taskSourceApp: TaskSourceApp.Wps,
   codexCliPath: DEFAULT_CODEX_CLI_PATH,
   customCliPath: DEFAULT_CUSTOM_CLI_COMMAND,
   defaultTaskStatus: TaskStatus.Todo,
@@ -66,6 +69,7 @@ export function normalizeLayoutDirection(value: unknown): LayoutDirection {
 export interface SettingsHostPlugin extends Plugin {
   settings: AiKnowledgeWorkflowSettings;
   saveSettings(): Promise<void>;
+  refreshTaskSourceViews(): Promise<void>;
 }
 
 export class AiKnowledgeWorkflowSettingTab extends PluginSettingTab {
@@ -101,6 +105,20 @@ export class AiKnowledgeWorkflowSettingTab extends PluginSettingTab {
         dropdown.setValue(this.plugin.settings.provider).onChange(async (value) => {
           this.plugin.settings.provider = value as ModelProviderType;
           await this.plugin.saveSettings();
+        });
+      });
+
+    new Setting(containerEl)
+      .setName("任务来源应用")
+      .setDesc("选择 WPS 或飞书。所有任务的来源标签和打开入口统一跟随此设置，已有来源名称保持不变。WPS 打开功能仅支持 macOS；飞书需要安装桌面客户端。")
+      .addDropdown((dropdown) => {
+        for (const sourceApp of Object.values(TaskSourceApp)) {
+          dropdown.addOption(sourceApp, TASK_SOURCE_APP_LABELS[sourceApp]);
+        }
+        dropdown.setValue(this.plugin.settings.taskSourceApp).onChange(async (value) => {
+          this.plugin.settings.taskSourceApp = value as TaskSourceApp;
+          await this.plugin.saveSettings();
+          await this.plugin.refreshTaskSourceViews();
         });
       });
 

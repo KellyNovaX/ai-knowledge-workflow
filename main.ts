@@ -1,6 +1,6 @@
 import { FuzzySuggestModal, Menu, Notice, Platform, Plugin, requireApiVersion, TAbstractFile, TFile, TFolder, WorkspaceLeaf } from "obsidian";
 import { z } from "zod";
-import { PLUGIN_ID, PLUGIN_NAME } from "./src/constants";
+import { PLUGIN_ID, PLUGIN_NAME, TASK_SOURCE_APP_LABELS } from "./src/constants";
 import {
   AiKnowledgeWorkflowSettingTab,
   DEFAULT_SETTINGS,
@@ -11,6 +11,7 @@ import {
 import {
   AiKnowledgeWorkflowSettings,
   TaskScope,
+  TaskSourceApp,
   ModelProviderType,
   ValidationIssue,
   ValidationSeverity
@@ -62,7 +63,7 @@ import { SkillActionId, SkillActions } from "./src/skills/SkillActions";
 import { AiWorkspaceLauncher } from "./src/workspace/AiWorkspaceLauncher";
 import { openCodexAppForProject, openCodexAppForTask, openCodexAppWithPrompt } from "./src/workspace/CodexAppLauncher";
 import { DefaultAppOpener } from "./src/workspace/DefaultAppOpener";
-import { openWpsChatTarget } from "./src/workspace/WpsChatOpener";
+import { canOpenTaskSource, openTaskSource, TaskSourceOpenMode } from "./src/workspace/TaskSourceOpener";
 import { askTextNoteName, TextNoteModalResultKind } from "./src/ui/TextNoteModal";
 import { TextNoteCreator } from "./src/vault/TextNoteCreator";
 import { getConfiguredAiAgent } from "./src/agents";
@@ -83,6 +84,7 @@ const settingsSchema = z.object({
   vaultRoot: z.string().catch(DEFAULT_SETTINGS.vaultRoot)
     .transform((value) => value.trim() || DEFAULT_SETTINGS.vaultRoot),
   provider: z.nativeEnum(ModelProviderType).catch(DEFAULT_SETTINGS.provider),
+  taskSourceApp: z.nativeEnum(TaskSourceApp).catch(DEFAULT_SETTINGS.taskSourceApp),
   terminalApp: z.unknown().transform(normalizeTerminalApp),
   codexCliPath: z.string().catch(DEFAULT_SETTINGS.codexCliPath),
   customCliPath: z.string().catch(DEFAULT_SETTINGS.customCliPath),
@@ -557,7 +559,9 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
       copyTaskToAgent: async (task: BoardTask) => this.copyTaskToAgent(task),
       openTaskInAgent: async (task: BoardTask) => this.openTaskInAgent(task),
       openTaskInCodexApp: async (task: BoardTask) => this.openTaskInCodexApp(task),
-      openWpsChat: Platform.isMacOS ? async (target: BoardTaskWpsTarget) => this.openWpsChat(target) : undefined,
+      getTaskSourceApp: () => this.settings.taskSourceApp,
+      canOpenTaskSource: () => canOpenTaskSource(this.settings.taskSourceApp),
+      openTaskSource: async (target: BoardTaskWpsTarget) => this.openTaskSource(target),
       runSkillAction: async (actionId: SkillActionId) => this.runSkillAction(actionId),
       openAiAgentInVault: async () => this.openAiAgentInVault(),
       openSettings: () => this.openSettings()
@@ -798,20 +802,31 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     return indexPath;
   }
 
-  private async openWpsChat(target: BoardTaskWpsTarget): Promise<void> {
+  private async openTaskSource(target: BoardTaskWpsTarget): Promise<void> {
+    const sourceApp = this.settings.taskSourceApp;
+    const sourceLabel = TASK_SOURCE_APP_LABELS[sourceApp];
     try {
-      const result = await openWpsChatTarget(target);
-      new Notice(
-        result.copiedSearchText
-          ? result.filledSearchText
-            ? `已打开 WPS 协作，并填入搜索词：${target.label}`
-            : `已打开 WPS 协作，并复制搜索词：${target.label}`
-          : `已打开 WPS 协作：${target.label}`
-      );
+      const mode = await openTaskSource(sourceApp, target);
+      const messages: Record<TaskSourceOpenMode, string> = {
+        [TaskSourceOpenMode.Direct]: `已请求打开 ${sourceLabel}：${target.label}`,
+        [TaskSourceOpenMode.Search]: `已请求在 ${sourceLabel} 中搜索：${target.label}`,
+        [TaskSourceOpenMode.SearchWithCopiedText]: `已请求在 ${sourceLabel} 中搜索：${target.label}。搜索词已复制，可在未自动填入时粘贴。`,
+        [TaskSourceOpenMode.FilledSearchText]: `已打开 ${sourceLabel}，并填入搜索词：${target.label}`,
+        [TaskSourceOpenMode.CopiedSearchText]: `已打开 ${sourceLabel}，并复制搜索词：${target.label}`
+      };
+      new Notice(messages[mode]);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      new Notice(`打开 WPS 协作失败：${message}`);
-      console.error("AI Knowledge: Open WPS chat failed", error);
+      new Notice(`打开 ${sourceLabel} 失败：${message}`);
+      console.error("AI Knowledge: Open task source failed", error);
+    }
+  }
+
+  async refreshTaskSourceViews(): Promise<void> {
+    for (const leaf of this.app.workspace.getLeavesOfType(TODO_BOARD_VIEW_TYPE)) {
+      if (leaf.view instanceof TodoBoardView) {
+        await leaf.view.refresh();
+      }
     }
   }
 

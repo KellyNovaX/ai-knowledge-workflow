@@ -29,9 +29,7 @@ const TASK_ID_PATTERN = /\b(?:tid:(\d+)|id:([pwg]-\d+))\b/;
 const TASK_SCOPE_PATTERN = /#task\/(general|project|workflow)\b/;
 const LEGACY_GENERAL_TAG_PATTERN = /(?:^|\s)#general\b/g;
 const PROJECT_METADATA_PATTERN = /[；;]\s*关联项目\s*[：:]\s*([^#\n]*?)(?=\s+due:|\s+wps:|\s+#task\/|\s+id:|\s+tid:|\s+created:|$)/;
-const WPS_MARKDOWN_TARGET_PATTERN = /(?:^|\s)wps:\[([^\]]+)]\(([^)]+)\)/g;
-const WPS_QUOTED_TARGET_PATTERN = /(?:^|\s)wps:"([^"]+)"/g;
-const WPS_SIMPLE_TARGET_PATTERN = /(?:^|\s)wps:([^\s]+)/g;
+const WPS_TARGET_PATTERN = /(?:^|\s)wps:(?:\[([^\]]+)]\(([^)]+)\)|"((?:\\.|[^"\\])*)"|([^\s]+))/g;
 const LINK_PATTERN = /(?:\[\[([^|\]#]+)(?:#[^|\]]*)?(?:\|([^\]]+))?\]\]|\[([^\]]*)]\(([^)#]+)(?:#[^)]+)?\))/g;
 const EXTERNAL_LINK_PATTERN = /^[a-z][a-z0-9+.-]*:/i;
 
@@ -82,6 +80,7 @@ export interface BoardTask {
   rawLine: string;
   rawLines: string[];
   links: BoardTaskLink[];
+  // 沿用 wps 来源字段以兼容旧知识库，打开应用由全局设置决定。
   wpsTargets: BoardTaskWpsTarget[];
 }
 
@@ -1252,9 +1251,7 @@ function parseTaskMetadata(body: string): {
     .replace(TASK_ID_PATTERN, "")
     .replace(TASK_SCOPE_PATTERN, "")
     .replace(LEGACY_GENERAL_TAG_PATTERN, "")
-    .replace(WPS_MARKDOWN_TARGET_PATTERN, "")
-    .replace(WPS_QUOTED_TARGET_PATTERN, "")
-    .replace(WPS_SIMPLE_TARGET_PATTERN, "")
+    .replace(WPS_TARGET_PATTERN, "")
     .split("\n")
     .map((line) => line.replace(/[ \t]+/g, " ").trimEnd())
     .join("\n")
@@ -1274,16 +1271,9 @@ function extractProjectMetadata(body: string): string[] {
 function extractWpsTargets(body: string): BoardTaskWpsTarget[] {
   const targets: BoardTaskWpsTarget[] = [];
 
-  for (const match of body.matchAll(WPS_MARKDOWN_TARGET_PATTERN)) {
-    addWpsTarget(targets, match[1], match[2]);
-  }
-
-  for (const match of body.matchAll(WPS_QUOTED_TARGET_PATTERN)) {
-    addWpsTarget(targets, match[1], null);
-  }
-
-  for (const match of body.matchAll(WPS_SIMPLE_TARGET_PATTERN)) {
-    addWpsTarget(targets, match[1], null);
+  for (const match of body.matchAll(WPS_TARGET_PATTERN)) {
+    const label = match[1] ?? match[3]?.replace(/\\(["\\])/g, "$1") ?? match[4];
+    addWpsTarget(targets, label, match[2] ?? null);
   }
 
   return targets;
@@ -1317,7 +1307,8 @@ function formatWpsTarget(target: BoardTaskWpsTarget): string {
     return `wps:[${target.label}](${target.url})`;
   }
 
-  return /\s/.test(target.label) ? `wps:"${target.label}"` : `wps:${target.label}`;
+  const escapedLabel = target.label.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  return /[\s"\\]/.test(target.label) ? `wps:"${escapedLabel}"` : `wps:${target.label}`;
 }
 
 function extractTaskLinks(text: string): BoardTaskLink[] {

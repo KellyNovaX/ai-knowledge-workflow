@@ -2,6 +2,7 @@
   "vaultRoot": "",
   "provider": "manual",
   "terminalApp": "obsidian",
+  "taskSourceApp": "wps",
   "codexCliPath": "codex",
   "defaultTaskStatus": "todo",
   "autoValidate": true,

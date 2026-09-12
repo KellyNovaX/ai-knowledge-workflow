@@ -10,6 +10,11 @@ export enum TerminalApp {
   Obsidian = "obsidian"
 }
 
+export enum TaskSourceApp {
+  Wps = "wps",
+  Feishu = "feishu"
+}
+
 export enum LayoutDirection {
   Vertical = "vertical",
   Horizontal = "horizontal"
@@ -122,6 +127,7 @@ export interface AiKnowledgeWorkflowSettings {
   vaultRoot: string;
   provider: ModelProviderType;
   terminalApp: TerminalApp;
+  taskSourceApp: TaskSourceApp;
   codexCliPath: string;
   customCliPath: string;
   defaultTaskStatus: TaskStatus;

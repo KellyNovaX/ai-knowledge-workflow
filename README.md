@@ -77,6 +77,10 @@ Background skill execution inherits the CLI's existing permissions and sandbox s
 
 ## Platforms and external integrations
 
+Choose **WPS** or **飞书 (Feishu)** under **Settings → AI Knowledge Workflow → 任务来源应用**. WPS is the default. All tasks, including completed tasks, follow this setting for source labels and opening actions; open boards refresh immediately. Switching apps preserves existing source names and links.
+
+Feishu source actions request a client search by name and try to copy the search text for manual pasting. Install and sign in to the Feishu desktop client first. Existing links for the selected app open directly; links for the other app fall back to searching by name. The Markdown field remains `wps:` for backward compatibility and no longer determines which app opens.
+
 Requires Obsidian desktop 1.5.0 or later. Mobile devices are not supported.
 
 | Feature | Requirements and limitations |
