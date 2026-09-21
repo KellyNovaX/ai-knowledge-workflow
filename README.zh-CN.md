@@ -30,7 +30,7 @@ AI Knowledge Workflow 已有 Obsidian 社区目录公开展示页，客户端搜
 
 ### 在已有知识库中手动安装
 
-1. 取得发布包 `ai-knowledge-workflow-0.3.4.zip` 并解压。
+1. 取得发布包 `ai-knowledge-workflow-0.3.5.zip` 并解压。
 2. 将其中的 `ai-knowledge-workflow` 文件夹放入知识库的 `.obsidian/plugins/`。如果使用自定义配置目录，则放在该目录的 `plugins/` 下。
 3. 重新加载 Obsidian，在设置 → 第三方插件中启用 **AI Knowledge Workflow**。
 4. 在命令面板运行 **AI Knowledge: Initialize vault structure**，查看将要创建的内容并确认。初始化会补齐知识库文件和 `.agents/skills/` 下的三个配套技能，不覆盖已有内容。
@@ -39,7 +39,7 @@ AI Knowledge Workflow 已有 Obsidian 社区目录公开展示页，客户端搜
 
 ### 从零开始
 
-取得 `ai-knowledge-starter-0.3.4.zip`，解压后在 Obsidian 中选择“打开本地仓库”，选中解压的知识库文件夹。阅读其中的 `START-HERE.md`，手动启用插件即可。
+取得 `ai-knowledge-starter-0.3.5.zip`，解压后在 Obsidian 中选择“打开本地仓库”，选中解压的知识库文件夹。阅读其中的 `START-HERE.md`，手动启用插件即可。
 
 ## 第一次使用
 
@@ -90,6 +90,9 @@ AI Knowledge Workflow 已有 Obsidian 社区目录公开展示页，客户端搜
 | iTerm / Warp / WPS 自动化 | 仅 macOS，需对应软件；系统可能提示自动化授权 |
 | 飞书任务来源 | 通过客户端链接唤起搜索或打开已有飞书链接；需飞书桌面客户端 |
 | Codex 应用链接 | 需已安装能够处理对应链接的桌面应用 |
+| KCwork 任务与项目按钮 | 默认关闭，仅 macOS。点击后打开 KCwork、复制工作目录，并显示入口文件引用；需在 KCwork 中手动选择目录和引用文件。 |
+
+使用 KCwork 时，先在插件设置中开启 **显示 KCwork 打开入口**。点击任务或项目卡片上的 KCwork 图标后，在 KCwork 新建会话，选择 **在项目中工作**，粘贴已复制的目录路径。随后返回 Obsidian 的提示框复制文件引用，在 KCwork 用 `@` 菜单选中文件。插件只准备路径和引用文本，不创建会话或发送消息。
 
 在文件列表中双击文件，可用系统默认程序打开（包括 Markdown、TXT、PDF 等）；单击仍按 Obsidian 原有方式打开，文件夹仍可正常展开和收起。右键菜单也提供 **Open with system default app**。
 
