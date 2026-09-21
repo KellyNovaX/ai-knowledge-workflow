@@ -776,13 +776,11 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     const absoluteVaultRoot = this.getConfiguredVaultRoot();
     this.aiWorkspaceLaunchInProgress = true;
     try {
-      await openKcworkForFile(this.app, {
+      await openKcworkForFile({
         absoluteWorkspacePath: target.workspacePath
           ? `${absoluteVaultRoot}/${target.workspacePath}`
-          : absoluteVaultRoot,
-        fileReference: target.fileReference
+          : absoluteVaultRoot
       });
-      new Notice("KCwork 已打开；工作目录已复制，请按提示选择目录与引用文件");
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       new Notice(`打开 KCwork 失败：${message}`);
@@ -811,11 +809,9 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     }
 
     try {
-      await openKcworkForFile(this.app, {
-        absoluteWorkspacePath: this.resolveProjectWorkspacePath(project.path),
-        fileReference: basename(filePath)
+      await openKcworkForFile({
+        absoluteWorkspacePath: this.resolveProjectWorkspacePath(project.path)
       });
-      new Notice("KCwork 已打开；工作目录已复制，请按提示选择目录与引用文件");
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       new Notice(`打开 KCwork 失败：${message}`);
