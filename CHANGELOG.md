@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.5 — 2026-09-21
+
+- Add an opt-in KCwork button to task and project cards on macOS. It opens KCwork, copies the matching workspace directory, and shows the entry file reference for manual selection in KCwork.
+- Keep the KCwork button hidden by default and refresh open boards when the setting changes.
+
 ## 0.3.4 — 2026-09-12
 
 - Preserve nested parentheses and escaped brackets in task source links, retain incomplete source text, and keep source names from being interpreted as task metadata. Verified with 64 temporary runtime and DOM checks.

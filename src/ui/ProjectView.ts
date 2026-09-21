@@ -11,6 +11,8 @@ export interface ProjectViewActions {
   openProjects(): Promise<void>;
   openFaq(): Promise<void>;
   openProjectInCodex(project: ProjectCardEntry): Promise<void>;
+  openProjectInKcwork(project: ProjectCardEntry): Promise<void>;
+  isKcworkEnabled(): boolean;
   openProjectInCustomCli(project: ProjectCardEntry): Promise<void>;
 }
 
@@ -205,6 +207,11 @@ export class ProjectView extends ItemView {
     this.renderActionButton(actions, "Codex", "app-window", project, () =>
       this.actions.openProjectInCodex(project)
     );
+    if (this.actions.isKcworkEnabled()) {
+      this.renderActionButton(actions, "KCwork", "layout-panel-left", project, () =>
+        this.actions.openProjectInKcwork(project)
+      );
+    }
     this.renderActionButton(actions, "Custom CLI", "terminal", project, () =>
       this.actions.openProjectInCustomCli(project)
     );

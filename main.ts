@@ -62,6 +62,7 @@ import { ProjectCardEntry } from "./src/vault/ProjectRepository";
 import { SkillActionId, SkillActions } from "./src/skills/SkillActions";
 import { AiWorkspaceLauncher } from "./src/workspace/AiWorkspaceLauncher";
 import { openCodexAppForProject, openCodexAppForTask, openCodexAppWithPrompt } from "./src/workspace/CodexAppLauncher";
+import { openKcworkForFile } from "./src/workspace/KcworkAppLauncher";
 import { DefaultAppOpener } from "./src/workspace/DefaultAppOpener";
 import { canOpenTaskSource, openTaskSource, TaskSourceOpenMode } from "./src/workspace/TaskSourceOpener";
 import { askTextNoteName, TextNoteModalResultKind } from "./src/ui/TextNoteModal";
@@ -85,6 +86,7 @@ const settingsSchema = z.object({
     .transform((value) => value.trim() || DEFAULT_SETTINGS.vaultRoot),
   provider: z.nativeEnum(ModelProviderType).catch(DEFAULT_SETTINGS.provider),
   taskSourceApp: z.nativeEnum(TaskSourceApp).catch(DEFAULT_SETTINGS.taskSourceApp),
+  enableKcworkApp: z.boolean().catch(DEFAULT_SETTINGS.enableKcworkApp),
   terminalApp: z.unknown().transform(normalizeTerminalApp),
   codexCliPath: z.string().catch(DEFAULT_SETTINGS.codexCliPath),
   customCliPath: z.string().catch(DEFAULT_SETTINGS.customCliPath),
@@ -559,6 +561,8 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
       copyTaskToAgent: async (task: BoardTask) => this.copyTaskToAgent(task),
       openTaskInAgent: async (task: BoardTask) => this.openTaskInAgent(task),
       openTaskInCodexApp: async (task: BoardTask) => this.openTaskInCodexApp(task),
+      openTaskInKcwork: async (task: BoardTask) => this.openTaskInKcwork(task),
+      isKcworkEnabled: () => this.settings.enableKcworkApp && Platform.isMacOS,
       getTaskSourceApp: () => this.settings.taskSourceApp,
       canOpenTaskSource: () => canOpenTaskSource(this.settings.taskSourceApp),
       openTaskSource: async (target: BoardTaskWpsTarget) => this.openTaskSource(target),
@@ -582,6 +586,8 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
       openProjects: async () => this.activateProjects(),
       openFaq: async () => this.activateFaq(),
       openProjectInCodex: async (project: ProjectCardEntry) => this.openProjectInCodex(project),
+      openProjectInKcwork: async (project: ProjectCardEntry) => this.openProjectInKcwork(project),
+      isKcworkEnabled: () => this.settings.enableKcworkApp && Platform.isMacOS,
       openProjectInCustomCli: async (project: ProjectCardEntry) => this.openProjectInCustomCli(project)
     };
   }
@@ -755,6 +761,37 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
     }
   }
 
+  private async openTaskInKcwork(task: BoardTask): Promise<void> {
+    if (this.aiWorkspaceLaunchInProgress) {
+      new Notice("AI workspace is already opening.");
+      return;
+    }
+
+    const target = this.resolveTaskAgentTarget(task);
+    if (!(this.app.vault.getAbstractFileByPath(target.filePath) instanceof TFile)) {
+      new Notice(`Task entry file is missing: ${target.filePath}`);
+      return;
+    }
+
+    const absoluteVaultRoot = this.getConfiguredVaultRoot();
+    this.aiWorkspaceLaunchInProgress = true;
+    try {
+      await openKcworkForFile(this.app, {
+        absoluteWorkspacePath: target.workspacePath
+          ? `${absoluteVaultRoot}/${target.workspacePath}`
+          : absoluteVaultRoot,
+        fileReference: target.fileReference
+      });
+      new Notice("KCwork 已打开；工作目录已复制，请按提示选择目录与引用文件");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      new Notice(`打开 KCwork 失败：${message}`);
+      console.error("AI Knowledge: Open Task in KCwork failed", error);
+    } finally {
+      window.setTimeout(() => { this.aiWorkspaceLaunchInProgress = false; }, 1500);
+    }
+  }
+
   private async openProjectInCodex(project: ProjectCardEntry): Promise<void> {
     try {
       await openCodexAppForProject({ absoluteWorkspacePath: this.resolveProjectWorkspacePath(project.path) });
@@ -763,6 +800,26 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
       const message = error instanceof Error ? error.message : String(error);
       new Notice(`Failed to open Codex App: ${message}`);
       console.error("AI Knowledge: Open Project in Codex App failed", error);
+    }
+  }
+
+  private async openProjectInKcwork(project: ProjectCardEntry): Promise<void> {
+    const filePath = this.resolveProjectMainFilePath(project.path);
+    if (!(this.app.vault.getAbstractFileByPath(filePath) instanceof TFile)) {
+      new Notice(`Project entry file is missing: ${filePath}`);
+      return;
+    }
+
+    try {
+      await openKcworkForFile(this.app, {
+        absoluteWorkspacePath: this.resolveProjectWorkspacePath(project.path),
+        fileReference: basename(filePath)
+      });
+      new Notice("KCwork 已打开；工作目录已复制，请按提示选择目录与引用文件");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      new Notice(`打开 KCwork 失败：${message}`);
+      console.error("AI Knowledge: Open Project in KCwork failed", error);
     }
   }
 
@@ -825,6 +882,15 @@ export default class AiKnowledgeWorkflowPlugin extends Plugin {
   async refreshTaskSourceViews(): Promise<void> {
     for (const leaf of this.app.workspace.getLeavesOfType(TODO_BOARD_VIEW_TYPE)) {
       if (leaf.view instanceof TodoBoardView) {
+        await leaf.view.refresh();
+      }
+    }
+  }
+
+  async refreshKcworkViews(): Promise<void> {
+    await this.refreshTaskSourceViews();
+    for (const leaf of this.app.workspace.getLeavesOfType(PROJECT_VIEW_TYPE)) {
+      if (leaf.view instanceof ProjectView) {
         await leaf.view.refresh();
       }
     }

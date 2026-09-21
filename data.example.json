@@ -3,6 +3,7 @@
   "provider": "manual",
   "terminalApp": "obsidian",
   "taskSourceApp": "wps",
+  "enableKcworkApp": false,
   "codexCliPath": "codex",
   "defaultTaskStatus": "todo",
   "autoValidate": true,

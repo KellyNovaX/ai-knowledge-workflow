@@ -128,6 +128,7 @@ export interface AiKnowledgeWorkflowSettings {
   provider: ModelProviderType;
   terminalApp: TerminalApp;
   taskSourceApp: TaskSourceApp;
+  enableKcworkApp: boolean;
   codexCliPath: string;
   customCliPath: string;
   defaultTaskStatus: TaskStatus;

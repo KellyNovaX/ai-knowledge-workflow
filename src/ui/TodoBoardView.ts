@@ -96,6 +96,8 @@ export interface TodoBoardActions {
   copyTaskToAgent?(task: BoardTask): Promise<void>;
   openTaskInAgent?(task: BoardTask): Promise<void>;
   openTaskInCodexApp?(task: BoardTask): Promise<void>;
+  openTaskInKcwork?(task: BoardTask): Promise<void>;
+  isKcworkEnabled(): boolean;
   getTaskSourceApp(): TaskSourceApp;
   canOpenTaskSource(): boolean;
   openTaskSource(target: BoardTaskWpsTarget): Promise<void>;
@@ -655,6 +657,18 @@ export class TodoBoardView extends ItemView {
     openCodexAppButton.addEventListener("click", () => {
       void this.openTaskInCodexApp(task);
     });
+
+    if (this.actions.isKcworkEnabled()) {
+      const openKcworkButton = createTaskIconButton(
+        actions,
+        "layout-panel-left",
+        `用 KCwork 打开：${titleText}`,
+        "用 KCwork 打开"
+      );
+      openKcworkButton.addEventListener("click", () => {
+        void this.openTaskInKcwork(task);
+      });
+    }
 
     const openAgentButton = createTaskIconButton(
       actions,
@@ -1247,6 +1261,15 @@ export class TodoBoardView extends ItemView {
     }
 
     await this.actions.openTaskInCodexApp(task);
+  }
+
+  private async openTaskInKcwork(task: BoardTask): Promise<void> {
+    if (!this.actions.openTaskInKcwork) {
+      new Notice("Open task in KCwork is unavailable.");
+      return;
+    }
+
+    await this.actions.openTaskInKcwork(task);
   }
 
   private async openTaskSource(target: BoardTaskWpsTarget): Promise<void> {

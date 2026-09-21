@@ -24,6 +24,7 @@ export const DEFAULT_SETTINGS: AiKnowledgeWorkflowSettings = {
   provider: ModelProviderType.Manual,
   terminalApp: TerminalApp.Obsidian,
   taskSourceApp: TaskSourceApp.Wps,
+  enableKcworkApp: false,
   codexCliPath: DEFAULT_CODEX_CLI_PATH,
   customCliPath: DEFAULT_CUSTOM_CLI_COMMAND,
   defaultTaskStatus: TaskStatus.Todo,
@@ -70,6 +71,7 @@ export interface SettingsHostPlugin extends Plugin {
   settings: AiKnowledgeWorkflowSettings;
   saveSettings(): Promise<void>;
   refreshTaskSourceViews(): Promise<void>;
+  refreshKcworkViews(): Promise<void>;
 }
 
 export class AiKnowledgeWorkflowSettingTab extends PluginSettingTab {
@@ -121,6 +123,17 @@ export class AiKnowledgeWorkflowSettingTab extends PluginSettingTab {
           await this.plugin.refreshTaskSourceViews();
         });
       });
+
+    new Setting(containerEl)
+      .setName("显示 KCwork 打开入口")
+      .setDesc("默认关闭。开启后在任务和项目卡片显示 KCwork 按钮；仅支持 macOS。点击后打开 KCwork、复制工作目录，并显示文件引用供手动选择。")
+      .addToggle((toggle) =>
+        toggle.setValue(this.plugin.settings.enableKcworkApp).onChange(async (value) => {
+          this.plugin.settings.enableKcworkApp = value;
+          await this.plugin.saveSettings();
+          await this.plugin.refreshKcworkViews();
+        })
+      );
 
     new Setting(containerEl)
       .setName("Terminal app")

@@ -30,7 +30,7 @@ AI Knowledge Workflow has a public listing in the Obsidian community directory. 
 
 ### Install manually in an existing vault
 
-1. Download and extract `ai-knowledge-workflow-0.3.4.zip`.
+1. Download and extract `ai-knowledge-workflow-0.3.5.zip`.
 2. Place the extracted `ai-knowledge-workflow` folder in your vault's `.obsidian/plugins/` directory. If your vault uses a custom configuration directory, use its `plugins/` subdirectory instead.
 3. Reload Obsidian and enable **AI Knowledge Workflow** under **Settings → Community plugins**.
 4. Run **AI Knowledge: Initialize vault structure** from the command palette. Review the files it proposes to create, then confirm. Initialization adds missing vault files and the three companion skills under `.agents/skills/`; it does not overwrite existing content.
@@ -39,7 +39,7 @@ To update manually, replace `main.js`, `manifest.json`, and `styles.css`, and ke
 
 ### Start with an empty vault
 
-Download and extract `ai-knowledge-starter-0.3.4.zip`. In Obsidian, choose **Open folder as vault** and select the extracted vault folder. Read its `START-HERE.md`, then enable the plugin manually.
+Download and extract `ai-knowledge-starter-0.3.5.zip`. In Obsidian, choose **Open folder as vault** and select the extracted vault folder. Read its `START-HERE.md`, then enable the plugin manually.
 
 ## First steps
 
@@ -91,6 +91,9 @@ Requires Obsidian desktop 1.5.0 or later. Mobile devices are not supported.
 | Embedded terminal in Obsidian | Uses the optional, separately installed Terminal community plugin; requires a configured POSIX shell; automatic launch is unavailable on Windows |
 | iTerm, Warp, and WPS automation | macOS only; requires the corresponding application; the operating system may request automation permission |
 | Codex application links | Requires an installed desktop application that handles the corresponding links |
+| KCwork task and project buttons | Off by default; macOS only. Opens KCwork, copies the workspace path, and shows the file reference for manual selection in KCwork. Requires the KCwork desktop app. |
+
+To use KCwork, enable **显示 KCwork 打开入口** in the plugin settings. Click the KCwork icon on a task or project card, create a conversation in KCwork, choose **Work in a project**, and paste the copied directory. Return to the Obsidian prompt to copy the file reference, then select the file through KCwork's `@` menu. The plugin prepares the path and reference text; it does not create or send a conversation.
 
 Double-click a file in the file explorer to open it with the system default app, including Markdown, TXT, and PDF files. Single clicks keep Obsidian's normal behavior, and folders still expand and collapse normally. The context menu also provides **Open with system default app**.
 
