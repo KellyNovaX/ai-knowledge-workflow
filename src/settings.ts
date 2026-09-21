@@ -126,7 +126,7 @@ export class AiKnowledgeWorkflowSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("显示 KCwork 打开入口")
-      .setDesc("默认关闭。开启后在任务和项目卡片显示 KCwork 按钮；仅支持 macOS。点击后打开 KCwork、复制工作目录，并显示文件引用供手动选择。")
+      .setDesc("默认关闭。开启后在任务和项目卡片显示 KCwork 按钮；仅支持 macOS。点击后复制工作目录并打开 KCwork，可在选目录窗口使用“前往文件夹”粘贴路径。")
       .addToggle((toggle) =>
         toggle.setValue(this.plugin.settings.enableKcworkApp).onChange(async (value) => {
           this.plugin.settings.enableKcworkApp = value;

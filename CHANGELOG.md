@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.6 — 2026-09-21
+
+- Remove the KCwork handoff dialog. Task and project buttons now copy the workspace directory and open KCwork directly, leaving folder and file selection to the user.
+
 ## 0.3.5 — 2026-09-21
 
 - Add an opt-in KCwork button to task and project cards on macOS. It opens KCwork, copies the matching workspace directory, and shows the entry file reference for manual selection in KCwork.
